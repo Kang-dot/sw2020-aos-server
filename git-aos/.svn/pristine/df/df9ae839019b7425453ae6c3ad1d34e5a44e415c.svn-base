@@ -1,0 +1,8 @@
+package com.aos.requestorder;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class RequestOrderController {
+
+}

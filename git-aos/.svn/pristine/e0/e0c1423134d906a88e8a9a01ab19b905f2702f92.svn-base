@@ -1,0 +1,98 @@
+package com.aos.requestorder;
+
+import java.sql.Date;
+import java.io.Serializable;
+
+/**
+ * @author plusperson@gmail.com
+*/
+public class RequestOrder implements Serializable {
+    private Date orderDate;
+    private String supplierNo;
+    private String ingredientNo;
+    private String orderQuantity;
+    private String totalOrderPrice;
+    private String status;
+
+    private int itemStart;
+    private int itemSizePerPage;
+
+    public RequestOrder() {
+    }
+
+    public RequestOrder(Date orderDate, String supplierNo, String ingredientNo, String orderQuantity, String totalOrderPrice, String status, int itemStart, int itemSizePerPage) {
+        this.orderDate = orderDate;
+        this.supplierNo = supplierNo;
+        this.ingredientNo = ingredientNo;
+        this.orderQuantity = orderQuantity;
+        this.totalOrderPrice = totalOrderPrice;
+        this.status = status;
+
+        this.itemStart = itemStart;
+        this.itemSizePerPage = itemSizePerPage;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public Date getOrderDate() {
+        return this.orderDate;
+    }
+
+    public void setSupplierNo(String supplierNo) {
+        this.supplierNo = supplierNo;
+    }
+
+    public String getSupplierNo() {
+        return this.supplierNo;
+    }
+
+    public void setIngredientNo(String ingredientNo) {
+        this.ingredientNo = ingredientNo;
+    }
+
+    public String getIngredientNo() {
+        return this.ingredientNo;
+    }
+
+    public void setOrderQuantity(String orderQuantity) {
+        this.orderQuantity = orderQuantity;
+    }
+
+    public String getOrderQuantity() {
+        return this.orderQuantity;
+    }
+
+    public void setTotalOrderPrice(String totalOrderPrice) {
+        this.totalOrderPrice = totalOrderPrice;
+    }
+
+    public String getTotalOrderPrice() {
+        return this.totalOrderPrice;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setItemStart(int itemStart) {
+        this.itemStart = itemStart;
+    }
+
+    public int getItemStart() {
+        return this.itemStart;
+    }
+
+    public void setItemSizePerPage(int itemSizePerPage) {
+        this.itemSizePerPage = itemSizePerPage;
+    }
+
+    public int getItemSizePerPage() {
+        return this.itemSizePerPage;
+    }
+}

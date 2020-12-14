@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Author: plusperson@gmail.com -->
+<mapper namespace="com.aos.ingredient.IngredientMapper">
+    <resultMap id="ingredientResultMap" type="com.aos.ingredient.Ingredient">
+        <result column="INGREDIENT_NO" property="no" />
+        <result column="INGREDIENT_NAME" property="name" />
+        <result column="UNIT_WEIGHT" property="unitWeight" />
+        <result column="UNIT_PRICE" property="unitPrice" />
+        <result column="STATUS" property="status" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="no != null and no != ''">
+                AND NO = #{no}
+            </if>
+            <if test="name != null and name != ''">
+                AND NAME = #{name}
+            </if>
+            <if test="unitWeight != null and unitWeight != ''">
+                AND UNIT_WEIGHT = #{unitWeight}
+            </if>
+            <if test="unitPrice != null and unitPrice != ''">
+                AND UNIT_PRICE = #{unitPrice}
+            </if>
+            <if test="status != null and status != ''">
+                AND STATUS = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="com.aos.ingredient.Ingredient" resultType="int">
+        SELECT COUNT(*)
+        FROM ingredient
+        <include refid="whereSql" />
+    </select>
+
+    <select id="list" parameterType="com.aos.ingredient.Ingredient" resultMap="ingredientResultMap">
+        SELECT *
+        FROM (
+            SELECT
+                NO,
+                NAME,
+                UNIT_WEIGHT,
+                UNIT_PRICE,
+                STATUS
+            FROM ingredient
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1)
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <select id="select" parameterType="com.aos.ingredient.Ingredient" resultMap="ingredientResultMap">
+        SELECT
+            INGREDIENT_NO,
+            INGREDIENT_NAME,
+            UNIT_WEIGHT,
+            UNIT_PRICE,
+            STATUS
+        FROM ingredient
+        <include refid="whereSql" />
+    </select>
+    
+    <select id="selectbyname" parameterType="String" resultMap="ingredientResultMap">
+        SELECT
+            INGREDIENT_NO,
+            INGREDIENT_NAME,
+            UNIT_WEIGHT,
+            UNIT_PRICE,
+            STATUS
+        FROM ingredient
+        WHERE INGREDIENT_NAME = #{name}
+    </select>
+    
+    <select id="selectAll" resultMap="ingredientResultMap">
+        SELECT
+            INGREDIENT_NO,
+            INGREDIENT_NAME,
+            UNIT_WEIGHT,
+            UNIT_PRICE,
+            STATUS
+        FROM ingredient
+        <include refid="whereSql" />
+    </select>
+
+    <insert id="insert" parameterType="com.aos.ingredient.Ingredient">
+        INSERT INTO ingredient (
+            NO,
+            NAME,
+            UNIT_WEIGHT,
+            UNIT_PRICE,
+            STATUS
+        ) VALUES (
+            #{no},
+            #{name},
+            #{unitWeight},
+            #{unitPrice},
+            #{status}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.aos.ingredient.Ingredient">
+        UPDATE ingredient
+        <set>
+            <if test="no != ''">
+                NO = #{no},
+            </if>
+            <if test="name != ''">
+                NAME = #{name},
+            </if>
+            <if test="unitWeight != ''">
+                UNIT_WEIGHT = #{unitWeight},
+            </if>
+            <if test="unitPrice != ''">
+                UNIT_PRICE = #{unitPrice},
+            </if>
+            <if test="status != ''">
+                STATUS = #{status},
+            </if>
+        </set>
+    </update>
+
+    <delete id="delete" parameterType="com.aos.ingredient.Ingredient">
+        DELETE FROM ingredient
+        <include refid="whereSql" />
+    </delete>
+</mapper>

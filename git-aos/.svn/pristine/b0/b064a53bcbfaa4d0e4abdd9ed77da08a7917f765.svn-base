@@ -1,0 +1,49 @@
+package com.aos.requestorder;
+
+import java.sql.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.aos.tray.Tray;
+
+@RestController
+public class RequestOrderController {
+	@Autowired
+	private RequestOrderServiceImpl requestOrderServiceImpl;
+	
+	@GetMapping("/requestorderinfo.do")
+	public String test() {
+		Tray tray = new Tray();
+		tray.setNo("1");
+		
+		requestOrderServiceImpl.registRequestOrderInfo(tray);
+		
+		return null;
+	}
+	
+	@GetMapping("/requestorderinfo")
+	public ModelAndView requestOrderList() {
+		ModelAndView modelAndView = new ModelAndView();
+		List<RequestOrder> result = requestOrderServiceImpl.requestOrderList();
+		modelAndView.setViewName("/requestorder/requestOrderList");
+		modelAndView.addObject("data", result);
+		return modelAndView;
+	}
+	
+	@GetMapping("/requestorderinfo/{date}")
+	public ModelAndView ingredientList(@PathVariable String date) {
+		ModelAndView modelAndView = new ModelAndView();
+		RequestOrder requestOrder = new RequestOrder();
+		requestOrder.setOrderDate(date);
+		System.out.println("incomeDate: " + date);
+		RequestOrder result = requestOrderServiceImpl.viewRequestOrder(requestOrder);
+		modelAndView.setViewName("/requestorder/requestOrderView");
+		modelAndView.addObject("data", result);
+		return modelAndView;
+	}
+}

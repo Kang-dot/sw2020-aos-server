@@ -1,0 +1,63 @@
+package com.aos.requestorder;
+
+import java.io.Serializable;
+
+public class RequestOrderInfo implements Serializable{
+	private String orderDate;
+	private String supplierName;
+	private String ingredientName;
+	private String orderAmount;
+	private String orderPrice;
+	
+	public RequestOrderInfo() {
+		
+	}
+	
+	public RequestOrderInfo(String orderDate, String supplierName, String ingredientName, String orderAmount,
+			String orderPrice) {
+		this.orderDate = orderDate;
+		this.supplierName = supplierName;
+		this.ingredientName = ingredientName;
+		this.orderAmount = orderAmount;
+		this.orderPrice = orderPrice;
+	}
+	
+	public String getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
+	public String getSupplierName() {
+		return supplierName;
+	}
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+	public String getIngredientName() {
+		return ingredientName;
+	}
+	public void setIngredientName(String ingredientName) {
+		this.ingredientName = ingredientName;
+	}
+	public String getOrderAmount() {
+		return orderAmount;
+	}
+	public void setOrderAmount(String orderAmount) {
+		this.orderAmount = orderAmount;
+	}
+	public String getOrderPrice() {
+		return orderPrice;
+	}
+	public void setOrderPrice(String orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "RequestOrderInfo [orderDate=" + orderDate + ", supplierName=" + supplierName + ", ingredientName="
+				+ ingredientName + ", orderAmount=" + orderAmount + ", orderPrice=" + orderPrice + "]";
+	}
+	
+	
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Author: plusperson@gmail.com -->
+<mapper namespace="com.aos.tray.TrayMapper">
+    <resultMap id="trayResultMap" type="com.aos.tray.Tray">
+        <result column="NO" property="no" />
+        <result column="INGREDIENT_NO" property="ingredientNo" />
+        <result column="ORDER_WEIGHT" property="orderWeight" />
+        <result column="ORDER_QUANTITY" property="orderQuantity" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="no != null and no != ''">
+                AND NO = #{no}
+            </if>
+            <if test="ingredientNo != null and ingredientNo != ''">
+                AND INGREDIENT_NO = #{ingredientNo}
+            </if>
+            <if test="orderWeight != null and orderWeight != ''">
+                AND ORDER_WEIGHT = #{orderWeight}
+            </if>
+            <if test="orderQuantity != null and orderQuantity != ''">
+                AND ORDER_QUANTITY = #{orderQuantity}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="com.aos.tray.Tray" resultType="int">
+        SELECT COUNT(*)
+        FROM tray
+        <include refid="whereSql" />
+    </select>
+
+    <select id="list" parameterType="com.aos.tray.Tray" resultMap="trayResultMap">
+        SELECT *
+        FROM (
+            SELECT
+                NO,
+                INGREDIENT_NO,
+                ORDER_WEIGHT,
+                ORDER_QUANTITY
+            FROM tray
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1)
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <select id="select" parameterType="com.aos.tray.Tray" resultMap="trayResultMap">
+        SELECT
+            NO,
+            INGREDIENT_NO,
+            ORDER_WEIGHT,
+            ORDER_QUANTITY
+        FROM tray
+        <include refid="whereSql" />
+    </select>
+
+    <insert id="insert" parameterType="com.aos.tray.Tray">
+        INSERT INTO tray (
+            NO,
+            INGREDIENT_NO,
+            ORDER_WEIGHT,
+            ORDER_QUANTITY
+        ) VALUES (
+            #{no},
+            #{ingredientNo},
+            #{orderWeight},
+            #{orderQuantity}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.aos.tray.Tray">
+        UPDATE tray
+        <set>
+            <if test="no != ''">
+                NO = #{no},
+            </if>
+            <if test="ingredientNo != ''">
+                INGREDIENT_NO = #{ingredientNo},
+            </if>
+            <if test="orderWeight != ''">
+                ORDER_WEIGHT = #{orderWeight},
+            </if>
+            <if test="orderQuantity != ''">
+                ORDER_QUANTITY = #{orderQuantity},
+            </if>
+        </set>
+    </update>
+
+    <delete id="delete" parameterType="com.aos.tray.Tray">
+        DELETE FROM tray
+        <include refid="whereSql" />
+    </delete>
+</mapper>

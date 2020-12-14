@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+trayRegistForm
+
+	<form action="/tray" method="post">
+			<label>트레이 번호</label>
+				<select name="no">
+					<c:forEach items="${trayList}" var="tray">
+						<option value="${tray.no}">${tray.no}</option>
+					</c:forEach>
+				</select>
+			</br></br>
+			
+			<label>식자재 명</label>
+				<select name="ingredientNo">
+					<c:forEach items="${ingredientList}" var="ingredient">
+						<option value="${ingredient.no}">${ingredient.name}</option>
+					</c:forEach>
+				</select>
+			</br></br>
+			
+			<label>발주 무게</label>
+				<input type="text" name="orderWeight">
+			</br></br>
+			
+			<label>발주 수량</label>
+				<input type="text" name="orderAmount">
+			</br></br>
+				
+			<input type="submit" value="등록" />
+	</form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="<%=request.getContextPath()%>/supplier" method="post">
+		거래처명 : <input type="text" name="supplierName"><br>
+		번호 : <input type="text" name="phoneNumber"><br>
+		이메일 : <input type="text" name="email"><br>
+		우편번호 : <input type="text" name="postNumber"><br>
+		주소 : <input type="text" name="address"><br>
+		상세주소 : <input type="text" name="detailAddress"><br>
+		
+		<input type="submit" value="거래처등록">
+	</form>
+</body>
+</html>

@@ -1,0 +1,12 @@
+package com.aos.supplier;
+
+import java.util.List;
+
+public interface SupplierService {
+	public void registSupplier(Supplier supplier);
+	public Supplier searchSupplier(Supplier supplier);
+	public List<Supplier> supplierList();
+	public void editSupplier(Supplier supplier);
+	public void deleteSupplier(Supplier supplier);
+	public int checkSupplier(String name);
+}

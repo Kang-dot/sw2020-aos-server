@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+${data}
+	
+	<form method="get" action="/ingredient/${data.name}/editform">
+		수정버튼 <input type="submit" value="${data.name}"/>
+	</form>
+
+	<form method="post" action="/ingredient">
+    	<input type="hidden" name="_method" value="DELETE"/>
+		삭제버튼 <input type="hidden" name="no" value="${data.no}"/>
+		<input type="submit" value="${data.no}" />
+	</form>
+	
+	<form method="get" action="/ingredient">
+		메인 <input type="submit" value="main"/>
+	</form>
+	
+</body>
+</html>

@@ -1,0 +1,107 @@
+package com.aos.ingredient;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com.aos.supplier.Supplier;
+
+@RestController
+public class IngredientController {
+	@Autowired
+	private IngredientServiceImpl ingredientServiceImpl;
+	
+	@GetMapping("/ingredient/form")
+	public ModelAndView registIngredient() {
+		ModelAndView modelAndView = new ModelAndView();
+		List<String> result = ingredientServiceImpl.showSupplier();
+		modelAndView.setViewName("/ingredient/ingredientRegistForm");
+		modelAndView.addObject("name", result);
+		System.out.println("registform");
+		return modelAndView;
+	}
+	
+	@PostMapping("/ingredient")
+	public ModelAndView registIngredient(Ingredient ingredient, String mainSupplier) {
+		ModelAndView modelAndView = new ModelAndView();
+		System.out.println(ingredient);
+		System.out.println(mainSupplier);
+		ingredientServiceImpl.registIngredient(ingredient, mainSupplier);
+		modelAndView.setViewName("redirect:ingredient");
+		return modelAndView;
+	}
+	
+	@GetMapping("/ingredient/{name}")
+	public ModelAndView viewIngredient(@PathVariable String name) {
+		ModelAndView modelAndView = new ModelAndView();
+		Ingredient result = ingredientServiceImpl.viewIngredient(name);
+		modelAndView.addObject("data", result);
+		modelAndView.setViewName("/ingredient/ingredientView");
+		return modelAndView;
+	}
+	
+	@GetMapping("/ingredient")
+	public ModelAndView ingredientList() {
+		ModelAndView modelAndView = new ModelAndView();
+		Map<String, String> arri = ingredientServiceImpl.ingredientList();
+		modelAndView.setViewName("/ingredient/ingredientList");
+		modelAndView.addObject("data", arri);
+		return modelAndView;
+	}
+	
+	@GetMapping(value = "/ingredient",consumes=MediaType.APPLICATION_JSON_VALUE)
+	public List<Ingredient> searchIngredisent() {
+		return null;
+	}
+	
+	@GetMapping("/ingredient/{name}/editform")
+	public ModelAndView editIngredient(@PathVariable String name) {
+		ModelAndView modelAndView = new ModelAndView();
+		Ingredient result = ingredientServiceImpl.viewIngredient(name);
+		String mainSupplier = ingredientServiceImpl.foreditForm(name);
+		List<String> supplierList = ingredientServiceImpl.showSupplier();
+		modelAndView.addObject("show", result);
+		modelAndView.addObject("main", mainSupplier);
+		modelAndView.addObject("supplierList", supplierList);
+		modelAndView.setViewName("/ingredient/ingredientEditForm");	
+		return modelAndView;
+	}
+	
+	@PutMapping("/ingredient")
+	public ModelAndView editIngredient(Ingredient ingredient, String mainSupplier) {
+		ModelAndView modelAndView = new ModelAndView();
+		ingredientServiceImpl.editIngredient(ingredient, mainSupplier);
+		modelAndView.setViewName("/ingredient/ingredientList");
+		return modelAndView;
+	}
+	
+	@DeleteMapping("/ingredient")
+	public ModelAndView deleteIngredient(String no) {
+		ModelAndView modelAndView = new ModelAndView();
+		RedirectView redirectView = new RedirectView();
+		redirectView.setUrl("/ingredient/ingredientList");
+		redirectView.setExposeModelAttributes(false);
+		System.out.println(no);
+		ingredientServiceImpl.deleteIngredient(no);
+		modelAndView.setView(redirectView);
+		return modelAndView;
+	}
+	
+	@PostMapping("/ingredient/check")
+	public String checkIngredient(String ingredientName) {
+		System.out.println("income: "+ingredientName);
+		String result = ingredientServiceImpl.checkIngredient(ingredientName);
+		
+		return result;
+	}
+}

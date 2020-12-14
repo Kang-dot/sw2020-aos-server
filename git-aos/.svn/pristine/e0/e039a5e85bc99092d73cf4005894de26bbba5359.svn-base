@@ -1,0 +1,84 @@
+package com.aos.serverio;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aos.requestorder.RequestOrder;
+import com.aos.requestorder.RequestOrderServiceImpl;
+import com.aos.tray.Tray;
+import com.aos.tray.TrayMapper;
+
+@Service
+public class ServerIOServiceImpl implements ServerIOService {
+	@Autowired
+	TrayMapper trayMapper;
+	
+	@Autowired
+	RequestOrderServiceImpl requestOrderServiceImpl;
+	
+	@Override
+	public ResponseMessage incomeRequestOrderWeight(int no, double weight) throws Exception {
+		Tray tray = new Tray();
+		tray.setNo(no + "");
+		tray = trayMapper.select(tray);
+		
+		boolean status = requestOrderServiceImpl.registRequestOrderInfo(no, weight);
+		
+		Properties pro = new Properties();
+		try {
+			File upperDir = new File("src\\main\\resources" + File.separator + "income.properties");
+			pro.load(new FileInputStream(upperDir.getAbsoluteFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		pro.setProperty(no+".tray.weight", String.valueOf(weight));
+		pro.setProperty(no+".tray.status", String.valueOf(status));
+		
+		try {
+			File upperDir = new File("src\\main\\resources" + File.separator + "income.properties");
+			pro.store(new FileOutputStream(upperDir.getAbsoluteFile()), "");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		ResponseMessage message = new ResponseMessage();
+		message.setNo(no + "");
+		
+		if (status) {
+			message.setStatus("true");
+		} else {
+			message.setStatus("false");
+		}
+
+//		try {
+//			if (Double.valueOf(tray.getOrderWeight()) >= weight) {
+//				RequestOrder requestOrder = new RequestOrder();
+//				requestOrder.setOrderAmount(tray.getOrderAmount());
+//				
+//				System.out.println("발주 정보를 등록합니다.");
+//				
+//				requestOrderServiceImpl.registRequestOrderInfo(no, weight);
+//				
+//				message.setStatus("true");
+//			} else {
+//				message.setStatus("false");
+//			}
+//		} catch (Exception e) {
+//			message.setNo(no + "");
+//			message.setStatus("error");
+//			message.setMessage("400");
+//		}
+		
+		return message;
+	}
+}

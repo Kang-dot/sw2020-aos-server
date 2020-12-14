@@ -1,0 +1,19 @@
+package com.aos.account;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * @author plusperson@gmail.com
+*/
+
+@Mapper
+public interface AccountMapper {
+    public int count(Account account) throws Exception;
+    public List<Account> list(Account account) throws Exception;
+    public Account select(Account account) throws Exception;
+    public void insert(Account account) throws Exception;
+    public void update(Account account) throws Exception;
+    public void delete(Account account) throws Exception;
+}

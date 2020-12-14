@@ -1,0 +1,230 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="../include/header.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="slim-mainpanel">
+		<div class="container">
+			<div class="slim-pageheader">
+				<ol class="breadcrumb slim-breadcrumb">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item"><a href="#">UI Elements</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Basic
+						Tables</li>
+				</ol>
+				<h6 class="slim-pagetitle">트레이 등록</h6>
+			</div>
+			<!-- slim-pageheader -->
+
+			<form action="/aos/tray" method="post">
+
+				<div class="section-wrapper mg-t-20">
+					<div class="col-md-6 col-lg-4"></div>
+
+					<div class="col-lg-4">
+						<div class="form-group mg-b-10-force">
+							<label class="form-control-label">트레이 번호: <span
+								class="tx-danger">*</span></label> <select name="no"
+								class="form-control select2" data-placeholder="Choose country">
+								<c:forEach items="${trayList}" var="tray">
+									<option value="${tray.no}">${tray.no}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<!-- col-4 -->
+
+					<div class="col-lg-4">
+						<div class="form-group mg-b-10-force">
+							<label class="form-control-label">식자재: <span
+								class="tx-danger">*</span></label> <select id="ingredientNo" name="ingredientNo"
+								class="form-control select2" data-placeholder="Choose country">
+								<c:forEach items="${ingredientList}" var="ingredient">
+									<option value="${ingredient.no}">${ingredient.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<!-- col-4 -->
+
+
+
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="form-control-label">발주 무게: <span
+								class="tx-danger">*</span></label>
+								<input class="form-control"	type="text" id="orderWeight" name="orderWeight" placeholder="발주 무게">
+								<div id="weightValid"></div>
+						</div>
+					</div>
+
+					<div class="col-lg-4">
+						<div class="form-group">
+							<label class="form-control-label">발주 수량: <span
+								class="tx-danger">*</span></label> 
+								<input class="form-control" type="text" id="orderAmount" name="orderAmount" placeholder="발주 수량">
+								<div id="amountValid"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6 col-md-3 mg-l-15 mg-t-10">
+							<div class="btn-demo">
+								<button type="button" class="btn btn-primary btn-block mg-b-10"
+									id="isDuplicate">유효확인</button>
+							</div>
+							<!-- btn-demo -->
+						</div>
+						<!-- col-sm-3 -->
+					</div>
+					<!-- row -->
+
+					<div class="row">
+						<div class="col-sm-6 col-md-3 mg-l-15 mg-t-10">
+							<div class="btn-demo">
+								<input class="btn btn-primary btn-block mg-b-10" id="submit_btn"
+									type="submit" value="등록" disabled="disabled" />
+							</div>
+							<!-- btn-demo -->
+						</div>
+						<!-- col-sm-3 -->
+					</div>
+					<!-- row -->
+				</div>
+				<!-- section-wrapper -->
+			</form>
+		</div>
+		<!-- container -->
+	</div>
+	<!-- slim-mainpanel -->
+<%@ include file="../include/footer.jsp" %>
+</body>
+
+<script>
+	document.getElementById('isDuplicate').addEventListener('click',
+			duplicate_check);
+	
+	function isWeightValid() {
+		var weight = document.getElementById('orderWeight').value;
+		var weightValid = document.getElementById('weightValid');
+		
+		console.log("유효값 검증 : weight");
+		
+		if (weight == '' || weight == null || weight > 999.999 || weight < 0 || !($.isNumeric(weight))) {
+			var msg = "유효한 값이 아닙니다. 다시 입력해주세요";
+			
+			weightValid.innerHTML = msg;
+			
+			return false;
+		} else {
+			var msg = "정상 값입니다.";
+			
+			weightValid.innerHTML = msg;
+			
+			return true;
+		}
+	};
+	
+	function isAmountValid() {
+		var amount = document.getElementById('orderAmount').value;
+		var amountValid = document.getElementById('amountValid');
+		
+		console.log("유효값 검증 : amount");
+		
+		console.log(amount);
+		
+		if (amount == '' || amount == null || amount < 0 || !($.isNumeric(amount))) {
+			var msg = "유효한 값이 아닙니다. 다시 입력해주세요";
+			
+			amountValid.innerHTML = msg;
+			
+			return false;
+		} else {
+			var msg = "정상 값입니다.";
+			
+			amountValid.innerHTML = msg;
+			
+			return true;
+		}
+	}
+	
+	function duplicate_check() {
+		console.log("중복 체크");
+		
+		var weightStatus = isWeightValid();
+		var amountStatus = isAmountValid();
+		
+		var value = document.getElementById('ingredientNo').value;
+		console.log("값 : " + value);
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			console.log("----->" + xhr.readyState + " / " + xhr.DONE);
+
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {
+					var msg = xhr.responseText;
+
+					var submit = document.getElementById('submit_btn');
+					
+					if (msg == 'true' && value != '' && weightStatus && amountStatus) {
+						submit.disabled = false;
+					} else if (msg == 'false' || !(weightStatus) || !(amountStatus)) {
+						submit.disabled = 'disabled';
+					} else {
+						submit.disabled = 'disabled';
+					}
+			
+				} else {
+					console.error(xhr.responseText);
+				}
+			}
+		};
+		var ingredientNo = "no="
+				+ document.getElementById('ingredientNo').value;
+		xhr.open("POST", "http://localhost/aos/tray/check", true);
+		xhr.setRequestHeader("Content-type",
+				"application/x-www-form-urlencoded");
+		xhr.send(ingredientNo);
+	};
+	
+	
+	
+	
+</script>
+<script>
+	$(function() {
+		'use strict'
+
+		$('.form-layout .form-control').on('focusin', function() {
+			$(this).closest('.form-group').addClass('form-group-active');
+		});
+
+		$('.form-layout .form-control').on('focusout', function() {
+			$(this).closest('.form-group').removeClass('form-group-active');
+		});
+
+		// Select2
+		$('.select2').select2({
+			minimumResultsForSearch : Infinity
+		});
+
+		$('#select2-a, #select2-b').select2({
+			minimumResultsForSearch : Infinity
+		});
+
+		$('#select2-a').on('select2:opening', function(e) {
+			$(this).closest('.form-group').addClass('form-group-active');
+		});
+
+		$('#select2-a').on('select2:closing', function(e) {
+			$(this).closest('.form-group').removeClass('form-group-active');
+		});
+	});
+</script>
+
+</html>

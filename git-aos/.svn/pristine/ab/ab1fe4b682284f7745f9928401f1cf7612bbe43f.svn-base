@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/header.jsp" %>
+	
+	<form action="/aos/ingredient" method="post">
+	<div class="col-lg-12">
+            <div class="section-wrapper">
+              <label class="section-title">식자재 등록</label>
+              <p class="mg-b-20 mg-sm-b-40">항목에 정보를 입력하세요.</p>
+              <div class="form-layout form-layout-4">
+                <div class="row">
+                  <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                  <label class="form-control-label">식자재 명: <span class="tx-danger">*</span></label>
+                  <div id="display"></div>
+                    <input id="ingredientName" type="text" class="form-control" placeholder="식자재명 입력" name="name">
+                    <input id="btn" class="btn btn-primary bd-0" type="button" value="중복체크"/>
+                  </div>
+                </div><!-- row -->
+                <div class="row mg-t-20">
+                  <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                  <label class="form-control-label">단위 무게: <span class="tx-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="단위 무게 입력" name="unitWeight">
+                  </div>
+                </div>
+                <div class="row mg-t-20">
+                  <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                  <label class="form-control-label">단위 가격: <span class="tx-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="단위 가격 입력" name="unitPrice">
+                  </div>
+                </div>
+                <div class="row mg-t-20">
+                  <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                  <label class="form-control-label">주 거래처 명: <span class="tx-danger">*</span></label>
+                  		<select name="mainSupplier">
+								<option class="select2-selection__rendered" value="">주 거래처 지정 X</option>
+							<c:forEach var="list" items="${supplierList}">
+								<option class="select2-selection__rendered" value="${list}">${list} </option>
+							</c:forEach>
+   						</select>
+                  </div>
+                </div>
+                  
+                  <input id="submit_btn" type="submit" class="btn btn-primary bd-0" value="전송" disabled="disabled">
+                  
+                <div class="form-layout-footer mg-t-30">
+                  
+                </div><!-- form-layout-footer -->
+                
+              </div><!-- form-layout -->
+            </div><!-- section-wrapper -->
+          </div>
+          </form>
+	<!--  
+	<form action="/aos/ingredient" method="post">
+		식자재명: <input id="ingredientName" type="text" name="name"> 
+		<input id="btn" type="button" value="중복체크"/> <br/>
+		단위 무게: <input type="text" name="unitWeight"> <br/>
+		단위 가격: <input type="text" name="unitPrice"> <br/>
+		주거래처명:
+		<select name="mainSupplier">
+				<option class="select2-selection__rendered" value="">주 거래처 지정 X</option>
+			<c:forEach var="list" items="${supplierList}">
+				<option class="select2-selection__rendered" value="${list}">${list} </option>
+			</c:forEach>
+   		</select>
+		<br>
+		
+		<input id="submit_btn" type="submit" value="전송" disabled="disabled">
+		<input type="reset" value="지우기">		
+	</form>
+	-->
+	
+	
+	<%@ include file="../include/footer.jsp" %>
+</body>
+<script>
+	document.getElementById('btn').addEventListener('click', ajax_call);
+
+	function ajax_call() {
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			console.log("----->" + xhr.readyState + " / " + xhr.DONE);
+
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {
+					var msg = xhr.responseText;
+
+					document.getElementById('display').innerHTML = msg;
+					var submit = document.getElementById('submit_btn');
+					
+					if (msg == 'true'){
+						console.log("값 들어옴 : true");
+						submit.disabled=false;
+					} else if (msg == 'false') {
+						console.log("값 들어옴 : false");
+						submit.disabled='disabled';
+					}
+				} else {
+					console.error(xhr.responseText);
+				}
+			}
+		};
+		var date = "ingredientName="+document.getElementById('ingredientName').value;
+		xhr.open("POST", "http://localhost/aos/ingredient/check", true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(date);
+	};
+</script>
+
+</html>

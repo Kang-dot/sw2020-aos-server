@@ -1,0 +1,78 @@
+package com.aos.tray;
+
+import java.sql.Date;
+import java.io.Serializable;
+
+/**
+ * @author plusperson@gmail.com
+*/
+public class Tray implements Serializable {
+    private String no;
+    private String ingredientNo;
+    private String orderWeight;
+    private String orderQuantity;
+
+    private int itemStart;
+    private int itemSizePerPage;
+
+    public Tray() {
+    }
+
+    public Tray(String no, String ingredientNo, String orderWeight, String orderQuantity, int itemStart, int itemSizePerPage) {
+        this.no = no;
+        this.ingredientNo = ingredientNo;
+        this.orderWeight = orderWeight;
+        this.orderQuantity = orderQuantity;
+
+        this.itemStart = itemStart;
+        this.itemSizePerPage = itemSizePerPage;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
+    }
+
+    public String getNo() {
+        return this.no;
+    }
+
+    public void setIngredientNo(String ingredientNo) {
+        this.ingredientNo = ingredientNo;
+    }
+
+    public String getIngredientNo() {
+        return this.ingredientNo;
+    }
+
+    public void setOrderWeight(String orderWeight) {
+        this.orderWeight = orderWeight;
+    }
+
+    public String getOrderWeight() {
+        return this.orderWeight;
+    }
+
+    public void setOrderQuantity(String orderQuantity) {
+        this.orderQuantity = orderQuantity;
+    }
+
+    public String getOrderQuantity() {
+        return this.orderQuantity;
+    }
+
+    public void setItemStart(int itemStart) {
+        this.itemStart = itemStart;
+    }
+
+    public int getItemStart() {
+        return this.itemStart;
+    }
+
+    public void setItemSizePerPage(int itemSizePerPage) {
+        this.itemSizePerPage = itemSizePerPage;
+    }
+
+    public int getItemSizePerPage() {
+        return this.itemSizePerPage;
+    }
+}

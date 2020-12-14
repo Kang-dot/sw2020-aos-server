@@ -1,0 +1,28 @@
+package com.aos.user;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Override
+	public String login(User user, HttpSession session) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean searchAccount(User user) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

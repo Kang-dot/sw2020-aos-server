@@ -1,0 +1,23 @@
+package com.aos.ingredient;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
+
+public class IngredientValidator implements Validator{
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Ingredient.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		Ingredient ingredient = (Ingredient) target;
+		
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "required", "필수항목");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "unitWeight", "required", "필수항목");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "unitPrice", "required", "필수항목");
+	}
+
+}

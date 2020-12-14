@@ -1,0 +1,68 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	trayRegistForm
+	<div id="display"></div>
+
+	<form action="/tray" method="post">
+		<label>트레이 번호</label> <select name="no">
+			<c:forEach items="${trayList}" var="tray">
+				<option value="${tray.no}">${tray.no}</option>
+			</c:forEach>
+		</select> </br> </br> <label>식자재 명</label> <select id="ingredientNo" name="ingredientNo">
+			<c:forEach items="${ingredientList}" var="ingredient">
+				<option value="${ingredient.no}">${ingredient.name}</option>
+			</c:forEach>
+		</select>
+
+		<input type="button" id="isDuplicate" value="중복확인"></button>
+		</br> </br> <label>발주 무게</label> <input type="text" name="orderWeight">
+		</br> </br> <label>발주 수량</label> <input type="text" name="orderAmount">
+		</br> </br> <input id="submit_btn" type="submit" value="등록" disabled="disabled" />
+	</form>
+</body>
+
+	<script>
+		document.getElementById('isDuplicate').addEventListener('click', duplicate_check);
+
+		function duplicate_check() {
+			var value = document.getElementById('ingredientNo').value;
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				console.log("----->" + xhr.readyState + " / " + xhr.DONE);
+
+				if (xhr.readyState === xhr.DONE) {
+					if (xhr.status === 200 || xhr.status === 201) {
+						var msg = xhr.responseText;
+
+						document.getElementById('display').innerHTML = msg;
+						var submit = document.getElementById('submit_btn');
+						
+						if (msg == 'true'){
+							console.log("값 들어옴 : true");
+							submit.disabled=false;
+						} else if (msg == 'false') {
+							console.log("값 들어옴 : false");
+							submit.disabled='disabled';
+						}
+					} else {
+						console.error(xhr.responseText);
+					}
+				}
+			};
+			var ingredientNo = "no=" + document.getElementById('ingredientNo').value;
+			xhr.open("POST", "http://localhost/tray/check", true);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.send(ingredientNo);
+		};
+	</script>
+
+</html>

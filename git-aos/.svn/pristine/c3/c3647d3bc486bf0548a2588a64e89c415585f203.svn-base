@@ -1,0 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+tray view
+
+<ul>
+  <li>트레이 번호 : ${tray.no}</li>
+  <li>식자재 명 : ${tray.ingredientNo}</li>
+  <li>발주 무게 : ${tray.orderWeight}</li>
+  <li>발주 수량 : ${tray.orderAmount}</li>
+</ul>
+</body>
+</html>

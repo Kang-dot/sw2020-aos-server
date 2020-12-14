@@ -1,0 +1,12 @@
+package com.aos.ingredient;
+
+import java.util.Map;
+
+public interface IngredientService {
+	public void registIngredient(Ingredient ingredient);
+	public Ingredient viewIngredient(String name);
+	public Map<String, String> ingredientList();
+	public void editIngredient(Ingredient ingredient);
+	public void deleteIngredient(String no);
+	public int checkIngredient(String name);
+}

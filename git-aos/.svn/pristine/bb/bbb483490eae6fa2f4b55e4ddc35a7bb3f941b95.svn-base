@@ -1,0 +1,132 @@
+package com.aos.ingredient;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aos.handling.Handling;
+import com.aos.handling.HandlingMapper;
+import com.aos.requestorder.RequestOrder;
+import com.aos.requestorder.RequestOrderMapper;
+import com.aos.supplier.Supplier;
+import com.aos.supplier.SupplierMapper;
+import com.aos.tray.Tray;
+import com.aos.tray.TrayMapper;
+
+@Service
+public class IngredientServiceImpl implements IngredientService{
+	@Autowired
+	private IngredientMapper ingredientMapper;
+	@Autowired
+	private SupplierMapper supplierMapper;
+	@Autowired
+	private TrayMapper trayMapper;
+	@Autowired
+	private HandlingMapper handlingMapper;
+	@Autowired
+	private RequestOrderMapper requestOrderMapper;
+	
+	@Override
+	public void registIngredient(Ingredient ingredient) {
+		/* if (식자재명이 중복되지 않는가? ) {
+		 * 		식자재 정보를 등록한다.
+		 * }
+		 * 
+		 */
+	}
+
+	@Override
+	public Ingredient viewIngredient(String name) {
+		Ingredient result = null;
+		try {
+			result = ingredientMapper.selectbyname(name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, String> ingredientList() {
+//		List<Ingredient> ingredientList = null;
+//		Map<String, String> arri = new HashMap<String, String>();
+//		String ingredientNo;
+//		String notFound = "notFound";
+//		
+//		try {
+//			ingredientList = ingredientMapper.selectAll();
+//			for (int i = 0; i < ingredientList.size(); i++) {
+//				ingredientNo = ingredientList.get(i).getNo();
+//				Supplier resultbyingredientNo = supplierMapper.selectbyIngredientNo(ingredientNo);
+//				if (resultbyingredientNo == null) {
+//					arri.put(ingredientList.get(i).getName(), notFound);
+//					System.out.println("1");
+//				} else {
+//					arri.put(ingredientList.get(i).getName(), resultbyingredientNo.getName());
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return arri;
+		return null;
+	}
+
+	@Override
+	public void editIngredient(Ingredient ingredient) {
+		/*
+		 * if (입력값이 존재하는가?) {
+		 * 		식자재 정보를 수정한다.
+		 * }
+		 */
+	}
+
+	@Override
+	public void deleteIngredient(String no) {
+//		try {
+//			RequestOrder requestOrder = new RequestOrder();
+//			requestOrder.setIngredientNo(no);
+//			requestOrder.setStatus("O");
+//			List<RequestOrder> order = requestOrderMapper.select(requestOrder);
+//			if (order.size() == 0) {
+//				System.out.println("OK"); // 식자재 번호와 상태가 O인게 없으면 진행 해도됨.
+//				Tray tray = new Tray();
+//				tray.setIngredientNo(no);
+//				Tray result = trayMapper.select(tray);
+//				System.out.println("result: " + result);
+//				tray.setNo(result.getNo());
+//				Tray toNull = new Tray();
+//				trayMapper.delete(tray);
+//				toNull.setNo(result.getNo());
+//				trayMapper.insert(toNull);
+//				
+//				Handling handling = new Handling();
+//				handling.setIngredientNo(no);
+//				handlingMapper.delete(handling);
+//				
+//				Ingredient ingredient = new Ingredient();
+//				ingredient.setNo(no);
+//				ingredient.setStatus("N");
+//				ingredientMapper.update(ingredient);
+//			}
+//			
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
+		
+	}
+
+	@Override
+	public int checkIngredient(String name) {
+		/*
+		 * 식자재 정보를 조회한다.
+		 * if (식자재명이 중복되지 않는가?) {
+		 * 		중복여부를 반환한다.
+		 * }
+		 */
+		return 0;
+	}
+}

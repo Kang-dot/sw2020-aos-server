@@ -1,0 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<c:forEach var="order" items="${data}">
+			발주날짜: <a href="/requestorder/${order.orderDate}"> ${order.orderDate} </br>
+			
+			거래처명: ${order.supplierNo} </br>
+			식자재명: ${order.ingredientNo} </br>
+	</c:forEach>
+</body>
+</html>

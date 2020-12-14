@@ -1,0 +1,33 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/tray/${trayInfo.no}" method="post">
+			<label>트레이 번호</label>
+				${trayInfo.no}
+			</br></br>
+			
+			<label>식자재 명</label>
+				${trayInfo.ingredientName}
+			</br></br>
+			
+			<label>발주 무게</label>
+				<input type="text" value="${trayInfo.orderWeight}" name="orderWeight">
+			</br></br>
+			
+			<label>발주 수량</label>
+				<input type="text" value="${trayInfo.orderAmount}" name="orderAmount">
+			</br></br>
+			
+			<input type="hidden" name="_method" value="PUT"/>
+			<input type="submit" value="수정" />
+	</form>
+</body>
+</html>

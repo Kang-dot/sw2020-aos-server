@@ -1,0 +1,256 @@
+package com.aos.ingredient;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aos.handling.Handling;
+import com.aos.handling.HandlingMapper;
+import com.aos.requestorder.RequestOrder;
+import com.aos.requestorder.RequestOrderMapper;
+import com.aos.supplier.Supplier;
+import com.aos.supplier.SupplierMapper;
+import com.aos.tray.Tray;
+import com.aos.tray.TrayMapper;
+
+@Service
+public class IngredientServiceImpl implements IngredientService{
+	@Autowired
+	private IngredientMapper ingredientMapper;
+	@Autowired
+	private SupplierMapper supplierMapper;
+	@Autowired
+	private TrayMapper trayMapper;
+	@Autowired
+	private HandlingMapper handlingMapper;
+	@Autowired
+	private RequestOrderMapper requestOrderMapper;
+	
+	@Override
+	public List<String> showSupplier() {
+		List<String> supplierName = new ArrayList<String>();
+		try {
+			Supplier supplier = new Supplier();
+			List<Supplier> supplierList = supplierMapper.list(supplier);
+			for (int i = 0; i < supplierList.size(); i++) {
+				supplierName.add(supplierList.get(i).getName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return supplierName;
+	}
+	
+	@Override
+	public void registIngredient(Ingredient ingredient, String mainSupplier) {
+		Ingredient clone = new Ingredient();
+		clone.setName(ingredient.getName());
+		clone.setUnitWeight(null);
+		clone.setUnitPrice(null);
+		clone.setStatus("N");
+		try {
+			Ingredient result = ingredientMapper.select(clone);
+			if (result == null) {
+				//식자재 상태가 N인게 존재하지 않으면
+				ingredient.setStatus("Y");
+				System.out.println(ingredient.getUnitWeight());
+				ingredientMapper.insert(ingredient); //ingredient 테이블 insert 먼저
+				
+				Ingredient needForingredientNo = ingredientMapper.selectByName(ingredient.getName());
+				Supplier setSupplier = new Supplier();
+				setSupplier.setName(mainSupplier);
+				Supplier supplier = supplierMapper.select(setSupplier);
+				Handling handling = new Handling();
+				handling.setIngredientNo(needForingredientNo.getNo()); 
+				handling.setSupplierNo(supplier.getNo());
+				handling.setMainSupplierStatus("Y");
+				handlingMapper.insert(handling); //handling 테이블 insert
+			} else {
+				//식자재 상태가 N인게 존재
+				result.setUnitWeight(ingredient.getUnitWeight());
+				result.setUnitPrice(ingredient.getUnitPrice());
+				result.setStatus("Y");
+				ingredientMapper.updateWithWhere(result);
+				
+				Ingredient needForingredientNo = ingredientMapper.selectByName(ingredient.getName());
+				Supplier setSupplier = new Supplier();
+				setSupplier.setName(mainSupplier);
+				Supplier supplier = supplierMapper.select(setSupplier);
+				Handling handling = new Handling();
+				handling.setIngredientNo(needForingredientNo.getNo()); 
+				handling.setSupplierNo(supplier.getNo());
+				handling.setMainSupplierStatus("Y");
+				handlingMapper.insert(handling); //handling 테이블 insert
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public Ingredient viewIngredient(String name) {
+		Ingredient result = null;
+		try {
+			result = ingredientMapper.selectByName(name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, String> ingredientList() {
+		List<Ingredient> ingredientList = null;
+		Map<String, String> result = new HashMap<String, String>();
+		String ingredientNo;
+		String notFound = "주거래처 없음";
+		
+		try {
+			ingredientList = ingredientMapper.selectAll("Y");
+			for (int i = 0; i < ingredientList.size(); i++) {
+				ingredientNo = ingredientList.get(i).getNo();
+				Supplier resultbyingredientNo = supplierMapper.selectbyIngredientNo(ingredientNo);
+				if (resultbyingredientNo == null) {
+					result.put(ingredientList.get(i).getName(), notFound);
+					System.out.println("1");
+				} else {
+					result.put(ingredientList.get(i).getName(), resultbyingredientNo.getName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	@Override
+	public Map<String, String> searchIngredient(String name) {
+		Map<String, String> arri = this.ingredientList();
+		String value = arri.get(name);
+		arri.clear();
+		System.out.println("name: " + name + "value: " + value);
+		arri.put("ingredientName", name);
+		arri.put("supplierName", value);
+		return arri;
+	}
+	
+	@Override
+	public String foreditForm(String name) {
+		Supplier supplier = null;
+		String result = null;
+		try {
+			Ingredient forNoingredient = ingredientMapper.selectByName(name);
+			supplier = supplierMapper.selectbyIngredientNo(forNoingredient.getNo());
+			if (supplier == null) {
+				result = "주거래처 없음";
+			} else {
+				result = supplier.getName();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void editIngredient(Ingredient ingredient, String mainSupplier) {
+		try {
+			System.out.println(ingredient);
+			ingredientMapper.updateWithWhere(ingredient);
+			
+			Supplier supplier = new Supplier();
+			supplier.setName(mainSupplier);
+			supplier = supplierMapper.select(supplier);
+			
+			Handling handling = new Handling();
+			handling.setIngredientNo(ingredient.getNo());
+			handling.setSupplierNo(supplier.getNo());
+			handling.setMainSupplierStatus("Y");
+			int count = handlingMapper.updatebyIngredienteditForm(handling);
+			if (count == 0) {
+				handlingMapper.insert(handling);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void deleteIngredient(String no) {
+		try {
+			RequestOrder requestOrder = new RequestOrder();
+			requestOrder.setIngredientNo(no);
+			requestOrder.setStatus("O");
+			RequestOrder order = requestOrderMapper.select(requestOrder);
+			if (order == null) {
+				System.out.println("OK"); // 식자재 번호와 상태가 O인게 없으면 진행 해도됨.
+				Tray tray = new Tray();
+				tray.setIngredientNo(no);
+				Tray result = trayMapper.select(tray);
+				if (result != null) {
+					tray.setNo(result.getNo());
+					Tray toNull = new Tray();
+					toNull.setNo(result.getNo());
+					toNull.setIngredientNo(null);
+					toNull.setOrderWeight(null);
+					toNull.setOrderAmount(null);
+					trayMapper.registTray(toNull);	
+				}
+				
+				Handling handling = new Handling();
+				handling.setIngredientNo(no);
+				int count = handlingMapper.delete(handling);
+				if (count != 0) {
+					Ingredient ingredient = new Ingredient();
+					ingredient.setNo(no);
+					ingredient.setStatus("N");
+					ingredientMapper.updateDelete(ingredient);
+				}
+				
+				Ingredient ingredient = new Ingredient();
+				ingredient.setNo(no);
+				ingredient.setStatus("N");
+				ingredientMapper.updateDelete(ingredient);
+			}
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public boolean checkIngredient(String name) {
+		Ingredient ingredient = new Ingredient();
+		ingredient.setName(name);
+		ingredient.setStatus("Y");
+		try {
+			int count = ingredientMapper.count(ingredient);
+			System.out.println(count);
+			if (count > 0) {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	@Override
+	public List<Ingredient> ingredients() {
+		List<Ingredient> ingredients = new ArrayList<>();
+		try {
+			ingredients = ingredientMapper.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ingredients;
+	}
+
+}

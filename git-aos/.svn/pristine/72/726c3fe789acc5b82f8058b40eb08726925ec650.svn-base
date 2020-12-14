@@ -1,0 +1,17 @@
+package com.aos.requestorder;
+
+import java.util.List;
+import java.util.Map;
+
+import com.aos.ingredient.Ingredient;
+import com.aos.supplier.Supplier;
+import com.aos.tray.Tray;
+
+public interface RequestOrderService {
+	public void registRequestOrderInfo(Tray tray);
+	public void changeStatus(Tray tray);
+	public void sendRequestOrderInfo(RequestOrder requestOrder, Supplier supplier, Ingredient ingredient);
+	public RequestOrderInfo viewRequestOrder(RequestOrder requestOrder); // RequestOrder -> Map<String, String>
+	public List<RequestOrderInfo> searchRequestOrder(String name); // 파리미터 Ingredient 변환 작업 필요
+	public List<RequestOrderInfo> requestOrderList();
+}

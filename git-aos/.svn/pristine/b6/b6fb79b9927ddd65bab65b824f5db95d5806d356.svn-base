@@ -1,0 +1,51 @@
+package com.aos.serverio;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aos.requestorder.RequestOrder;
+import com.aos.requestorder.RequestOrderServiceImpl;
+import com.aos.tray.Tray;
+import com.aos.tray.TrayMapper;
+
+@Service
+public class ServerIOServiceImpl implements ServerIOService {
+	@Autowired
+	TrayMapper trayMapper;
+	
+	@Autowired
+	RequestOrderServiceImpl requestOrderServiceImpl;
+	
+	@Override
+	public ResponseMessage incomeRequestOrderWeight(int no, double weight) throws Exception {
+		Tray tray = new Tray();
+		tray.setNo(no + "");
+		tray = trayMapper.select(tray);
+
+		ResponseMessage message = new ResponseMessage();
+		message.setNo(no + "");
+
+		try {
+			if (Double.valueOf(tray.getOrderWeight()) >= weight) {
+				RequestOrder requestOrder = new RequestOrder();
+				requestOrder.setOrderAmount(tray.getOrderAmount());
+				
+				System.out.println("발주 정보를 등록합니다.");
+				
+				
+				//requestOrderServiceImpl.registRequestOrderInfo(tray);
+				message.setStatus("true");
+			} else {
+				//
+				message.setStatus("false");
+			}
+		} catch (Exception e) {
+			message.setNo(no + "");
+			message.setStatus("error");
+			message.setMessage("400");
+		}
+		
+		return message;
+	}
+
+}

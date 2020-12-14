@@ -1,0 +1,19 @@
+package com.aos.ingredient;
+
+import java.util.List;
+import java.util.Map;
+
+import com.aos.handling.Handling;
+
+public interface IngredientService {
+	public Map<String, String> ingredientList();
+	public List<String> showSupplier();
+	public void registIngredient(Ingredient ingredient, String mainSupplier);
+	public Ingredient viewIngredient(String name);
+	public String foreditForm(String name);
+	public void editIngredient(Ingredient ingredient, String mainSupplier);
+	public void deleteIngredient(String no);
+	public Map<String, String> searchIngredient(String name);
+	public boolean checkIngredient(String name);
+	public List<Ingredient> ingredients(); // supplier에서 사용
+}

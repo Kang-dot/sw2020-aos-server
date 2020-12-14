@@ -1,0 +1,14 @@
+package com.aos;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+//@MapperScan(basePackageClasses = AosApplication.class)
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.aos"}) //해야함
+public class AosApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(AosApplication.class, args);
+	}
+}

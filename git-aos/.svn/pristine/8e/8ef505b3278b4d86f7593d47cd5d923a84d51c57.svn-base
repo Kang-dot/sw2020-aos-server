@@ -1,0 +1,12 @@
+package com.aos.tray;
+
+import java.util.List;
+
+public interface TrayService {
+	public void registTray(Tray tray);
+	public Tray viewTray(Tray tray);
+	public List<Tray> trayList();
+	public void editTray(Tray tray);
+	public void deleteTray(Tray tray);
+	public int checkTray(String ingredientName);
+}

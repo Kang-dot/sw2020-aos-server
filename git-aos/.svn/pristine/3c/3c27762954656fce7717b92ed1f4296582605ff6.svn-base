@@ -1,0 +1,72 @@
+package com.aos.requestorder;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RequestOrderServiceImpl implements RequestOrderService {
+	@Autowired
+	private RequestOrderMapper requestOrderMapper;
+	
+	@Override
+	public void registRequestOrderInfo(RequestOrder requestOrder) {
+		/*
+		 * if (무게 측정값을 수신했는가?) {
+		 * 		트레이 조회
+		 * 		if (발주 무게가 현재 무게값보다 큰가?) {
+		 * 			발주 테이블 조회
+		 * 			if (조회된 결과값이 없는가?) {
+		 * 				발주 정보 등록
+		 * 				발주 정보 전송
+		 * 			}
+		 * 		}
+		 * 		발주 테이블 조회
+		 * 		조회된 데이터의 상태값을 Y로 변경
+		 * } 끝
+		 * 
+		 */
+		
+	}
+
+	@Override
+	public void sendRequestOrderInfo(RequestOrder requestOrder) {
+		/*
+		 * if (입력값이 존재하는가?) {
+		 * 		식자재 테이블을 조회한다.
+		 * 		거래처 테이블을 조회한다.
+		 * 		조회된 정보들로 메일 양식을 생성한다.
+		 *      거래처에 메일을 전송한다.
+		 * }
+		 */
+	}
+
+	@Override
+	public RequestOrder viewRequestOrder(RequestOrder requestOrder) {
+		RequestOrder result = null;
+		try {
+			result = requestOrderMapper.select(requestOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<RequestOrder> requestOrderList() {
+		List<RequestOrder> requestOrderList = null;
+		Map<String, String> mapList = new HashMap<String, String>();
+		try {
+			requestOrderList = requestOrderMapper.list();
+			System.out.println(requestOrderList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return requestOrderList;
+	}
+
+}

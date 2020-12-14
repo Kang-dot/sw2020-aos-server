@@ -1,0 +1,21 @@
+package com.aos.ingredient;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * @author plusperson@gmail.com
+*/
+
+@Mapper
+public interface IngredientMapper {
+	public int count(Ingredient ingredient) throws Exception;
+    public List<Ingredient> list() throws Exception;
+    public Ingredient select(Ingredient ingredient) throws Exception;
+    public Ingredient selectbyname(String name) throws Exception;
+    public List<Ingredient> selectAll(String status) throws Exception;
+    public void insert(Ingredient ingredient) throws Exception;
+    public void update(Ingredient ingredient) throws Exception;
+    public void delete(Ingredient ingredient) throws Exception;
+}

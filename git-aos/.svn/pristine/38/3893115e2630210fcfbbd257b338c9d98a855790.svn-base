@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		document.getElementById('trayEdit')
+				.addEventListener('click', edit_form);
+
+		function edit_form() {
+			location.href = "/tray/${tray.no}/editform";
+		}
+	</script>
+
+	tray view
+	<ul>
+		<li>트레이 번호 : ${tray.no}</li>
+		<li>식자재 명 : ${tray.ingredientName}</li>
+		<li>발주 무게 : ${tray.orderWeight}</li>
+		<li>발주 수량 : ${tray.orderAmount}</li>
+		<br>
+
+		<c:if test="${!empty tray.ingredientName}">
+			<button type="button" id="trayEdit" onclick="edit_form()">수정하기</button>
+			<!-- 
+			<button type="button" id="trayDelete">삭제하기</button>
+			-->
+
+			<form:form action="/tray/${tray.no}" method="post">
+				<input type="hidden" name="_method" value="DELETE" />
+				<li><input type="submit" value="삭제하기" /></li>
+			</form:form>
+		</c:if>
+	</ul>
+</body>
+</html>

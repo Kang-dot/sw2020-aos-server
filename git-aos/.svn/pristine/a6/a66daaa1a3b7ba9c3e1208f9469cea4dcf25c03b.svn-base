@@ -1,0 +1,12 @@
+package com.aos.ingredient;
+
+import java.util.List;
+
+public interface IngredientService {
+	public void registIngredient(Ingredient ingredient);
+	public Ingredient viewIngredient(Ingredient ingredient);
+	public List<Ingredient> ingredientList();
+	public void editIngredient(Ingredient ingredient);
+	public void deleteIngredient(Ingredient ingredient);
+	public int checkIngredient(String name);
+}

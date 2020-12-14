@@ -1,0 +1,20 @@
+package com.aos.handling;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * @author plusperson@gmail.com
+*/
+
+@Mapper
+public interface HandlingMapper {
+    public int count(Handling handling) throws Exception;
+    public List<Handling> list(Handling handling) throws Exception;
+    public Handling select(Handling handling) throws Exception;
+    public void insert(Handling handling) throws Exception;
+    public void update(Handling handling) throws Exception;
+    public int updatebyIngredienteditForm(Handling handling) throws Exception; // 반환타입 void -> int (테스트중)
+    public int delete(Handling handling) throws Exception; // 반환타입 void -> int (테스트중)
+}

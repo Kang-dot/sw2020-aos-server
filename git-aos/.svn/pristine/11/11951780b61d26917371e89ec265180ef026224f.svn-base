@@ -1,0 +1,13 @@
+package com.aos.tray;
+
+import java.util.List;
+
+public interface TrayService {
+	public void registTray(Tray tray) throws Exception;
+	public Tray viewTray(Tray tray) throws Exception;
+	public List<Tray> trayList() throws Exception;
+	public void editTray(Tray tray) throws Exception;
+	public void deleteTray(Tray tray) throws Exception;
+	public boolean checkTray(String ingredientName) throws Exception;
+	public List<Integer> getTrayNo() throws Exception;
+}

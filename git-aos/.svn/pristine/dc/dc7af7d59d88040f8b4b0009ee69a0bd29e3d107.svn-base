@@ -1,0 +1,163 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/header.jsp"%>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<c:set var="ingredients" value="${ingredients }"/>
+<c:set var="supplier" value="${supplier }"/>
+<div class="slim-mainpanel">
+	<div class="container">
+		<div class="slim-pageheader">
+			<ol class="breadcrumb slim-breadcrumb">
+				<li class="breadcrumb-item"><a
+					href="<%=request.getContextPath()%>/aos/main">메인</a></li>
+				<li class="breadcrumb-item"><a
+					href="<%=request.getContextPath()%>/aos/supplier">거래처 관리</a></li>
+				<li class="breadcrumb-item">거래처 수정</li>
+			</ol>
+			<h6 class="slim-pagetitle">거래처 수정</h6>
+		</div>
+		<div class="col-lg-12">
+			<div class="section-wrapper">
+					<p class="mg-b-20 mg-sm-b-40">시스템에 거래처를 등록하기 위한 필수 입력 정보입니다.</p>
+					<div class="form-layout form-layout-4">
+						<form action="<%=request.getContextPath()%>/aos/supplier" method="post" name="editForm">
+						<input type = "hidden" name="_method" value="PUT"/>
+						<input type = "hidden" name ="no" value ="${supplier.no }" >
+						<input type = "hidden" name ="status" value ="${supplier.status }" >
+						<div class="row">
+							<label class="col-sm-4 form-control-label">거래처명 :</label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<input type="text" name="name" class="form-control" value="${supplier.name }" readonly>
+							</div>
+						</div>
+						<!-- row -->
+						<div class="row mg-t-20">
+							<label class="col-sm-4 form-control-label">취급 식자재 목록 : <span
+								class="tx-danger">*</span></label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<button type="button" class="btn btn-primary"
+									data-toggle="modal" data-target="#exampleModal">
+									<i class="fa fa-search"></i>
+								</button>
+								<!-- modal로 목록 출력 -->
+								<input type="hidden" name="handlingIngredients" />
+							</div>
+						</div>
+						<div class="row mg-t-20">
+							<label class="col-sm-4 form-control-label">연락처( - 제외) : <span
+								class="tx-danger">*</span></label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<input type="text" name="phoneNo" class="form-control"
+									style="width: 200px; height: 40px;" value="${supplier.phoneNo }"/>
+							</div>
+						</div>
+						<div class="row mg-t-20">
+							<label class="col-sm-4 form-control-label">이메일 : <span
+								class="tx-danger">*</span></label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<input type="text" name="email" class="form-control" value="${supplier.email }">
+							</div>
+						</div>
+						<div class="row mg-t-20">
+							<label class="col-sm-4 form-control-label">우편번호 : <span
+								class="tx-danger">*</span></label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<input type="text" name="zipCode" class="form-control" readonly
+									style="width: 120px; height: 40px;" value="${supplier.zipCode }"/>
+								<button type="button" class="btn btn-primary" id="zipCodeBtn">
+									<i class="fa fa-search"></i>
+								</button>
+							</div>
+						</div>
+						<div class="row mg-t-20">
+							<label class="col-sm-4 form-control-label">주소 : <span
+								class="tx-danger">*</span></label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<input type="text" name="address" class="form-control" value="${supplier.address }" readonly>
+							</div>
+						</div>
+						<div class="row mg-t-20">
+							<label class="col-sm-4 form-control-label">상세주소 : <span
+								class="tx-danger">*</span></label>
+							<div class="col-sm-8 mg-t-10 mg-sm-t-0">
+								<input type="text" name="detailAddress" class="form-control" value="${supplier.detailAddress }">
+							</div>
+						</div>
+						<div class="form-layout-footer mg-t-30">
+							<input class="btn btn-primary bd-0" type="submit" value="확인">
+							<button class="btn btn-secondary bd-0" onClick="history.go(-1)">뒤로</button>
+						</div>
+						</form>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+	aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">취급 식자재 목록</h5>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" style="text-align: center">
+				<table style="width: 100%">
+					<c:forEach var="ingredient" items="${ingredients }">
+						<tr>
+							<td>${ingredient.name }</td>
+							<td><input type="checkbox" name="ingredient"
+								value="${ingredient.name }" /></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="confirm"
+					data-dismiss="modal">확인</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%@ include file="../include/footer.jsp"%>
+</body>
+<script>
+	document.getElementById('zipCodeBtn').addEventListener('click', openZipSearch);
+	function openZipSearch() {
+		new daum.Postcode({
+			oncomplete : function(data) {
+				$('[name=zipCode]').val(data.zonecode);
+				$('[name=address]').val(data.address);
+				$('[name=detailAddress]').val(data.buildingName);
+			}
+		}).open();
+	}
+</script>
+<script>
+$(document).ready(
+		function() {
+				$("#confirm").click(function() {
+				var test2 = document.getElementsByName("ingredient");
+				var len = test2.length;
+				var cnt = 0;
+				var array = new Array();
+ 
+			for (var i = 0; i < len; i++) {
+				if (test2[i].checked == true) {
+					array[cnt]=test2[i].value;
+					cnt++;
+				}
+			}
+			document.editForm.handlingIngredients.value = array;
+		});
+	});
+</script>
+</html>

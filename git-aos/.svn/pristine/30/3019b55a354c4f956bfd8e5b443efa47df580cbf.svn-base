@@ -1,0 +1,243 @@
+package com.aos.requestorder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
+
+import com.aos.handling.Handling;
+import com.aos.handling.HandlingMapper;
+import com.aos.ingredient.Ingredient;
+import com.aos.ingredient.IngredientMapper;
+import com.aos.supplier.Supplier;
+import com.aos.supplier.SupplierMapper;
+import com.aos.tray.Tray;
+import com.aos.tray.TrayMapper;
+
+@Service
+public class RequestOrderServiceImpl implements RequestOrderService {
+	@Autowired
+	private TrayMapper trayMapper;
+	
+	@Autowired
+	private HandlingMapper handlingMapper;
+	
+	@Autowired
+	private IngredientMapper ingredientMapper;
+	
+	@Autowired
+	private RequestOrderMapper requestOrderMapper;
+	
+	@Autowired
+	private SupplierMapper supplierMapper;
+	
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	
+	@Override
+	public boolean registRequestOrderInfo(int trayNo, double weight) {
+		boolean status = false;
+		try {
+			Tray tray = new Tray();
+			tray.setNo(String.valueOf(trayNo));
+			tray = trayMapper.select(tray);
+
+			Handling handling = new Handling();
+			handling.setIngredientNo(tray.getIngredientNo());
+			handling.setStatus("Y");
+
+			handling = handlingMapper.select(handling);
+
+			Ingredient ingredient = new Ingredient();
+			ingredient.setNo(tray.getIngredientNo());
+
+			ingredient = ingredientMapper.select(ingredient);
+
+			RequestOrder requestOrder = new RequestOrder();
+			requestOrder.setIngredientNo(tray.getIngredientNo());
+			requestOrder.setSupplierNo(handling.getSupplierNo());
+			requestOrder.setStatus("O");
+
+			if (weight < Double.parseDouble(tray.getOrderWeight())) {
+				if (requestOrderMapper.select(requestOrder) == null) {
+					requestOrder.setOrderAmount(tray.getOrderAmount());
+					String orderPrice = String.valueOf(Integer.parseInt(tray.getOrderAmount()) * Integer.parseInt(ingredient.getUnitPrice()));
+					requestOrder.setOrderPrice(orderPrice);
+
+					requestOrderMapper.insert(requestOrder);
+
+					Supplier supplier = new Supplier();
+					supplier.setNo(handling.getSupplierNo());
+
+					supplierMapper.select(supplier);
+					sendRequestOrderInfo(requestOrder, supplier, ingredient);
+				}
+				status = true;
+			} else {
+				if (requestOrderMapper.select(requestOrder) != null) {
+					requestOrder.setOrderDate("");
+					requestOrder.setStatus("C");
+					System.out.println(requestOrder);
+					requestOrderMapper.update(requestOrder);
+				}
+				status = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
+
+	@Override
+	public void sendRequestOrderInfo(RequestOrder requestOrder, Supplier supplier, Ingredient ingredient) {
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				StringBuilder sb = new StringBuilder();
+				helper.setFrom("restaurant");
+				helper.setTo("qkrwngussample@gmail.com");
+				helper.setSubject("This is a Order List");
+				helper.setText(String.valueOf(sb.append("발주처 : restaurant\n").append("발주 품목 : " + ingredient.getName())
+						.append("\n발주 수량 : " + requestOrder.getOrderAmount())
+						.append("\n발주 가격 : " + requestOrder.getOrderPrice())), false);
+			}
+		};
+		mailSender.send(preparator);
+	}
+
+	@Override
+	public RequestOrderInfo viewRequestOrder(RequestOrder requestOrder) {
+		RequestOrder result = null;
+		RequestOrderInfo requestOrderInfo = null;
+		try {
+			result = requestOrderMapper.select(requestOrder);
+			Supplier supplier = new Supplier();
+			supplier.setNo(result.getSupplierNo());
+			Supplier containSupplierName = supplierMapper.select(supplier);
+
+			Ingredient ingredient = new Ingredient();
+			ingredient.setNo(result.getIngredientNo());
+			Ingredient containIngredientName = ingredientMapper.select(ingredient);
+
+			requestOrderInfo = new RequestOrderInfo();
+			requestOrderInfo.setOrderDate(result.getOrderDate());
+			requestOrderInfo.setSupplierName(containSupplierName.getName());
+			requestOrderInfo.setIngredientName(containIngredientName.getName());
+			requestOrderInfo.setOrderAmount(result.getOrderAmount());
+			requestOrderInfo.setOrderPrice(result.getOrderPrice());
+			requestOrderInfo.setZipCode(containSupplierName.getZipCode());
+			requestOrderInfo.setAddress(containSupplierName.getAddress());
+			requestOrderInfo.setDetailAddress(containSupplierName.getDetailAddress());
+			requestOrderInfo.setEmail(containSupplierName.getEmail());
+			requestOrderInfo.setPhoneNo(containSupplierName.getPhoneNo());
+			requestOrderInfo.setUnitPrice(containIngredientName.getUnitPrice());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return requestOrderInfo;
+	}
+
+	@Override
+	public List<RequestOrderInfo> requestOrderList() {
+		List<RequestOrder> requestOrderList = null;
+		List<RequestOrderInfo> resultList = null;
+		RequestOrderInfo requestOrderInfo = null;
+		String ingredientNo = null;
+		try {
+			resultList = new ArrayList<RequestOrderInfo>();
+			requestOrderList = requestOrderMapper.list();
+			for (int i = 0; i < requestOrderList.size(); i++) {
+				String supplierNo = requestOrderList.get(i).getSupplierNo();
+				ingredientNo = requestOrderList.get(i).getIngredientNo();
+				
+				Supplier supplier = new Supplier();
+				supplier.setNo(supplierNo);
+				Supplier resultbySupplierNo = supplierMapper.select(supplier);
+				
+				Ingredient ingredient = new Ingredient();
+				ingredient.setNo(ingredientNo);
+				Ingredient resultbyIngredientNo = ingredientMapper.select(ingredient);
+				
+				requestOrderInfo = new RequestOrderInfo();
+				requestOrderInfo.setOrderDate(requestOrderList.get(i).getOrderDate());
+				requestOrderInfo.setSupplierName(resultbySupplierNo.getName());
+				requestOrderInfo.setIngredientName(resultbyIngredientNo.getName());
+				resultList.add(requestOrderInfo);
+			}
+			System.out.println("requestList");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultList;
+	}
+
+	@Override
+	public List<RequestOrderInfo> searchRequestOrder(String date) {
+		RequestOrder requestOrder = new RequestOrder();
+		requestOrder.setOrderDate(date);
+		List<RequestOrder> result = null;
+		List<RequestOrderInfo> resultList = new ArrayList<RequestOrderInfo>();
+		RequestOrderInfo requestOrderInfo = null;
+		
+		try {
+			
+			if (date.trim().isEmpty()) { // 아무것도 없는 입력일 때
+				List<RequestOrder> allOrder = requestOrderMapper.list();
+				for (int i = 0; i < allOrder.size(); i++) {
+					String supplierNo = allOrder.get(i).getSupplierNo();
+					String ingredientNo = allOrder.get(i).getIngredientNo();
+					
+					Supplier supplier = new Supplier();
+					supplier.setNo(supplierNo);
+					Supplier resultbySupplierNo = supplierMapper.select(supplier);
+					
+					Ingredient ingredient = new Ingredient();
+					ingredient.setNo(ingredientNo);
+					Ingredient resultbyIngredientNo = ingredientMapper.select(ingredient);
+					
+					requestOrderInfo = new RequestOrderInfo();
+					requestOrderInfo.setOrderDate(allOrder.get(i).getOrderDate());
+					requestOrderInfo.setSupplierName(resultbySupplierNo.getName());
+					requestOrderInfo.setIngredientName(resultbyIngredientNo.getName());
+					
+					resultList.add(requestOrderInfo);
+				}
+			}
+			
+			result = requestOrderMapper.searchByDate(requestOrder);
+			if (result != null) {
+				for (int i = 0; i < result.size(); i++) {
+					String supplierNo = result.get(i).getSupplierNo();
+					String ingredientNo = result.get(i).getIngredientNo();
+					
+					Supplier supplier = new Supplier();
+					supplier.setNo(supplierNo);
+					Supplier resultbySupplierNo = supplierMapper.select(supplier);
+					
+					Ingredient ingredient = new Ingredient();
+					ingredient.setNo(ingredientNo);
+					Ingredient resultbyIngredientNo = ingredientMapper.select(ingredient);
+					
+					requestOrderInfo = new RequestOrderInfo();
+					requestOrderInfo.setOrderDate(result.get(i).getOrderDate());
+					requestOrderInfo.setSupplierName(resultbySupplierNo.getName());
+					requestOrderInfo.setIngredientName(resultbyIngredientNo.getName());
+					
+					resultList.add(requestOrderInfo);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resultList;
+	}
+}

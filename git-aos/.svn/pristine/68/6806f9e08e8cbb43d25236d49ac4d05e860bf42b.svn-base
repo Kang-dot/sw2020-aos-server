@@ -1,0 +1,90 @@
+package com.aos.tray;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aos.ingredient.IngredientMapper;
+
+@Service
+public class TrayServiceImpl implements TrayService {
+	@Autowired
+	TrayMapper trayMapper;
+	
+	@Autowired
+	IngredientMapper ingredientMapper;
+
+	@Override
+	public void registTray(Tray tray) throws Exception {
+		/*
+		 * if (입력한 값이 존재하는가?) { 트레이 정보를 조회한다. if (트레이에 등록되지 않은 식자재인가?) { 거래처 정보를 수정한다. }
+		 * } 끝
+		 */
+
+		String value = tray.getIngredientNo();
+
+		if (checkTray(value)) {
+			trayMapper.registTray(tray);
+		}
+	}
+
+	@Override
+	public Tray viewTray(Tray tray) throws Exception {
+		/*
+		 * if (입력한 값이 존재하는가?) { 트레이 정보를 조회한다. }
+		 */
+		
+		Tray selectTray = trayMapper.select(tray);
+		
+		return selectTray;
+	}
+
+	@Override
+	public List<Tray> trayList() throws Exception {
+		/*
+		 * 트레이 목록을 조회한다.
+		 */
+		List<Tray> list = trayMapper.selectAll();
+		
+		return list;
+	}
+
+	@Override
+	public void editTray(Tray tray) throws Exception {
+		/*
+		 * if (입력한 값이 존재하는가?) { 트레이 정보를 조회한다. 트레이 정보를 수정한다. } 끝
+		 */
+		trayMapper.update(tray);
+	}
+
+	@Override
+	public void deleteTray(Tray tray) throws Exception {
+		/*
+		 * if (입력값이 존재하는가?) { 트레이 정보 삭제 } 끝
+		 */
+		trayMapper.deleteTray(tray);
+	}
+
+	@Override
+	public boolean checkTray(String ingredientNo) throws Exception {
+		/*
+		 * 트레이 정보를 조회한다. if (트레이에 등록된 식자재명이 중복되지 않는가?) { 중복여부를 반환한다. } 중복여부를 반환한다.
+		 */
+		Tray tray = new Tray();
+		tray.setIngredientNo(ingredientNo);
+
+		if (trayMapper.select(tray).getIngredientNo() == null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public List<Integer> getTrayNo() throws Exception {
+		List<Integer> list = trayMapper.selectTrayNo();
+		return null;
+	}
+
+}

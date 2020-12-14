@@ -1,0 +1,89 @@
+package com.aos.supplier;
+
+import java.util.List;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SupplierServiceImpl implements SupplierService{
+	@Override
+	public void registSupplier(Supplier supplier) {
+		/*
+		 * if (입력값이 존재하는가?) {
+		 * 		거래처 정보를 조회한다.
+		 *		if (거래처명을 기존의 거래처 정보에 존재하지 않는가?) {
+		 *			if (거래처 명이 중복되지 않는가?) {
+		 *				거래처 정보를 등록한다.	
+		 *			}
+		 *			선택된 식자재를 취급 정보에 등록한다.
+		 *		}
+		 *		기존의 거래처 정보에서 상태를 변환하고 입력된 값을 update 한다.
+		 * }
+		 * 끝
+		 */
+	}
+
+	@Override
+	public Supplier searchSupplier(Supplier supplier) {
+		/*
+		 * 거래처 정보를 조회한다.
+		 * if (거래처명이 중복되지 않는가?) {
+		 * 		중복여부를 반환
+		 * }
+		 * 중복여부를 반환
+		 */
+		return null;
+	}
+
+	@Override
+	public List<Supplier> supplierList() {
+		/*
+		 * 거래처 정보를 조회한다.
+		 */
+		return null;
+	}
+
+	@Override
+	public void editSupplier(Supplier supplier) {
+		/*
+		 *  if (입력값이 존재하는가?) {
+		 *  	거래처 정보 조회
+		 *  	if (기존 거래처의 취급 식자재가 수정되었는가?) {
+		 *  		트레이 조회
+		 *  		취급 정보 조회
+		 *  		if (트레이에 등록된 식자재의 주 거래처가 해당 거래처가 아닌가?) {
+		 *  			거래처 정보 수정
+		 *  			취급 정보 삭제
+		 *  			취급 정보 등록
+		 *  		}
+		 *  	}
+		 *  	거래처 정보 수정
+		 *  }
+		 *  끝
+		 */
+	}
+
+	@Override
+	public void deleteSupplier(Supplier supplier) {
+		/*
+		 * if (입력한 값이 존재하는가?) {
+		 * 		취급 테이블을 조회한다.
+		 * 		취급 테이블의 해당 거래처에 속하는 항목들을 삭제한다.
+		 * 		거래처를 삭제한다.
+		 * }
+		 * 끝
+		 */
+	}
+
+	@Override
+	public int checkSupplier(String name) {
+		/*
+		 * 거래처 정보를 조회한다
+		 * if (거래처명이 중복되지 않는가?) {
+		 * 		중복 여부를 반환한다.
+		 * }
+		 * 중복 여부를 반환한다.
+		 */
+		return 0;
+	}
+
+}

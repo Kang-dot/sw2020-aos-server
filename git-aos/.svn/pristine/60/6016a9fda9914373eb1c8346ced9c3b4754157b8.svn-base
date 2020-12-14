@@ -1,0 +1,127 @@
+package com.aos.requestorder;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
+
+import com.aos.handling.Handling;
+import com.aos.handling.HandlingMapper;
+import com.aos.ingredient.Ingredient;
+import com.aos.ingredient.IngredientMapper;
+import com.aos.supplier.Supplier;
+import com.aos.supplier.SupplierMapper;
+import com.aos.tray.Tray;
+import com.aos.tray.TrayMapper;
+
+@Service
+public class RequestOrderServiceImpl implements RequestOrderService {
+	@Autowired
+	private TrayMapper trayMapper;
+
+	@Autowired
+	private HandlingMapper handlingMapper;
+
+	@Autowired
+	private IngredientMapper ingredientMapper;
+
+	@Autowired
+	private RequestOrderMapper requestOrderMapper;
+	
+	@Autowired
+	private SupplierMapper supplierMapper;
+	
+	@Autowired
+	private JavaMailSenderImpl mailSender;
+	
+	@Override
+	public void registRequestOrderInfo(Tray tray) {
+		// 5. 발주 정보를 셋팅한다.(11.24 : 밑에 세팅정보를 가지고
+		// requestOrder를 select 해본 후 같은 정보로 상태 값이 O로 등록된게 있다면
+		// 발주 정보 등록을 끝낸다.(수행하지 않고)
+		try {
+		tray = trayMapper.select(tray);
+		
+		Handling handling = new Handling();
+		handling.setIngredientNo(tray.getIngredientNo());
+		handling.setMainSupplierStatus("Y"); // 주거래처 여부
+		
+
+			handling = handlingMapper.select(handling);
+
+			Ingredient ingredient = new Ingredient();
+			ingredient.setNo(tray.getIngredientNo());
+
+			ingredient = ingredientMapper.select(ingredient);
+
+			RequestOrder requestOrder = new RequestOrder();
+			requestOrder.setIngredientNo(tray.getIngredientNo());
+			requestOrder.setSupplierNo(handling.getSupplierNo());
+			requestOrder.setOrderAmount(tray.getOrderAmount());
+			requestOrder.setOrderPrice(ingredient.getUnitPrice());
+			requestOrder.setStatus("O");
+			
+			requestOrderMapper.insert(requestOrder);
+			
+			Supplier supplier = new Supplier();
+			supplier.setNo(handling.getSupplierNo());
+			
+			supplierMapper.select(supplier);
+			sendRequestOrderInfo(requestOrder, supplier, ingredient);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void sendRequestOrderInfo(RequestOrder requestOrder, Supplier supplier,Ingredient ingredient) {
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				StringBuilder sb = new StringBuilder();
+				helper.setFrom("restaurant");
+				helper.setTo("qkrwngussample@gmail.com");//supplier.getEmail()
+				helper.setSubject("This is a Order List");
+				helper.setText(String.valueOf(sb.append("발주처 : restaurant\n")
+									.append("발주 품목 : " + ingredient.getName())
+									.append("\n발주 수량 : " + requestOrder.getOrderAmount())
+									.append("\n발주 가격 : " + requestOrder.getOrderPrice())), false);
+			}
+		};
+		mailSender.send(preparator);
+	}
+
+	@Override
+	public RequestOrder viewRequestOrder(RequestOrder requestOrder) {
+		RequestOrder result = null;
+		try {
+			result = requestOrderMapper.select(requestOrder);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<RequestOrder> requestOrderList() {
+		List<RequestOrder> requestOrderList = null;
+		Map<String, String> mapList = new HashMap<String, String>();
+		try {
+			requestOrderList = requestOrderMapper.list();
+			System.out.println(requestOrderList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return requestOrderList;
+	}
+
+}

@@ -1,0 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>식자재 목록</title>
+</head>
+<body>
+<h1><font size="8">식자재 목록</font></h1>
+
+<table border="1">
+	<tr>
+		<td>번호</td>
+		<td>식자재명</td>
+		<td>주 거래처명</td>
+		
+	</tr>
+	
+	<tr>
+		<td>000</td>
+		<td>000</td>
+		<td>000</td>
+		
+	</tr>
+	
+	<tr>
+		<td>000</td>
+		<td>000</td>
+		<td>000</td>
+		
+	</tr>
+	
+	<c:forEach var="i" items="${data}">
+			${i.key}=${i.value}
+	</c:forEach>
+
+</table>
+
+	<input id="income" type="text" name="user_name">
+    <input id="btn" type="button" value="ajax_call"/>
+    <div id="display"></div>
+</body>
+
+<script>
+	document.getElementById('btn').addEventListener('click', ajax_call);
+
+	function ajax_call() {
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			console.log("----->" + xhr.readyState + " / " + xhr.DONE);
+
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {
+					var html = "<table border=\"1\">";
+
+					var msg = xhr.responseText;
+					
+					console.log("=====>" + msg);
+							html += "<tr>";
+							html += "	<td>";
+							html += msg;
+							html += "	</td>";
+							html += "</tr>";
+						
+					
+					html += "</table>";
+
+					document.getElementById('display').innerHTML = html;
+				} else {
+					console.error(xhr.responseText);
+				}
+			}
+		};
+		var date = "income="+document.getElementById('income').value;
+		xhr.open("POST", "http://localhost/ingredient", true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(date);
+	};
+</script>
+</html>

@@ -1,0 +1,73 @@
+package com.aos.ingredient;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class IngredientServiceImpl implements IngredientService{
+	@Override
+	public void registIngredient(Ingredient ingredient) {
+		/* if (식자재명이 중복되지 않는가? ) {
+		 * 		식자재 정보를 등록한다.
+		 * }
+		 * 
+		 */
+	}
+
+	@Override
+	public Ingredient viewIngredient(Ingredient ingredient) {
+		/* if (수신한 값이 존재하는가?) {
+		 * 		식자재를 조회한다.
+		 * }
+		 * 
+		 */
+		return null;
+	}
+
+	@Override
+	public List<Ingredient> ingredientList() {
+		/*
+		 * 식자재 목록을 조회한다.
+		 */
+		return null;
+	}
+
+	@Override
+	public void editIngredient(Ingredient ingredient) {
+		/*
+		 * if (입력값이 존재하는가?) {
+		 * 		식자재 정보를 수정한다.
+		 * }
+		 */
+	}
+
+	@Override
+	public void deleteIngredient(Ingredient ingredient) {
+		/*
+		 * if (입력한 값이 존재하는가?) {
+		 * 		트레이 정보를 조회한다.
+		 * 	if (트레이에 등록된 식자재 중에 해당 식자재가 있는가?) {
+		 *  	트레이 정보를 삭제한다.
+		 *  	if (취급 테이블에 해당 식자재 정보가 있는가?) {
+		 *   		취급 테이블에서 해당 식자재 정보를 삭제한다.
+		 *   		식자재 정보를 등록한다.
+		 *   }
+		 *  }
+		 * }
+		 */
+		
+	}
+
+	@Override
+	public int checkIngredient(String name) {
+		/*
+		 * 식자재 정보를 조회한다.
+		 * if (식자재명이 중복되지 않는가?) {
+		 * 		중복여부를 반환한다.
+		 * }
+		 */
+		return 0;
+	}
+
+}

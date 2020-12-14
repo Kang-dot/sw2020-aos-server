@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+			<ul>
+				<li> 발주날짜: ${data.orderDate} </li>
+				<li> 거래처명: ${data.supplierName} </li>
+				<li> 식자재명: ${data.ingredientName} </li>
+				<li> 발주량: ${data.orderAmount} </li>
+				<li> 발주가격: ${data.orderPrice} </li>
+			</ul>
+			<form method="get" action="/aos/requestorderinfo">
+				<input type="submit" value="List"/>
+			</form>
+</body>
+</html>

@@ -1,0 +1,30 @@
+package com.aos.serverio;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.aos.requestorder.RequestOrderService;
+
+@RestController
+public class ServerIOController {
+	@Autowired
+	RequestOrderService requestOrderService;
+	
+	@PostMapping("/incomeOrderWeight")
+	public ResponseMessage isOrder(HttpServletRequest request) {
+		int no = Integer.valueOf(request.getParameter("trayNo"));
+		double weight = Double.valueOf(request.getParameter("weight"));
+		
+		//requestOrderService.registRequestOrderInfo(requestOrder);
+		
+		if (no > 0 && weight > 0) {
+			 
+		}
+		
+		return null;
+	}
+	
+}

@@ -1,0 +1,33 @@
+package com.aos.agent;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class AgentServiceImpl implements AgentService{
+	@Override
+	public void transferWeightValue(Object json) {
+		/* 무게값을 g 단위로 변환
+		 * 전송 JSON 생성
+		 * 서버에 메세지 송신
+		 * */
+	}
+
+	@Override
+	public void incomeWeightValue(Object json) {
+		/* 수신 데이터를 분석한다.
+		 * if (발주 무게 값이 존재하는가?) {
+		 * 수신한 발주 무게 값을 에이전트가 저장한다.
+		 * } 
+		 * */
+	}
+
+	@Override
+	public void ledLightingAccordingToStatus(double weight) {
+		/* if (발주 무게 이하인가?) {
+		 * 	LED를 켠다
+		 * }
+		 * LED를 끈다
+		 * */
+	}
+
+}

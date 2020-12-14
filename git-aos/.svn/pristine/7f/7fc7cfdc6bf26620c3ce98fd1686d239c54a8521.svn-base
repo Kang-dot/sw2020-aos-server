@@ -1,0 +1,22 @@
+package com.aos.serverio;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ServerIOServiceImpl implements ServerIOService {
+	@Override
+	public ResponseEntity<List<Map<String, String>>> incomeRequestOrderWeight(List<Map<String, String>> json) {
+		/*
+		 * 디바이스로 부터 정보를 전달받는다
+		 * 무게값을 추출한다
+		 * 발주 정보를 등록한다
+		 * 응답 정보를 전송한다.
+		 */
+		return null;
+	}
+
+}

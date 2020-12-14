@@ -1,0 +1,64 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>식자재 목록</title>
+</head>
+<body>
+<h1><font size="8">식자재 목록</font></h1>
+	<input id="income" type="text" name="user_name">
+    <input id="btn" type="button" value="검색"/>
+    <div id="display">
+    
+	<ul>
+	<c:forEach var="list" items="${data}" varStatus="status">
+			<li> 번호: ${status.count} </li>
+			<li> 식자재명: <a href="/aos/ingredient/${list.key}"> ${list.key} </a> </li>
+			<li> 거래처명: ${list.value}</li>
+			<br>
+	</c:forEach>
+	</ul>
+	</div>
+	
+	<form action="/aos/ingredient/form" method="get">
+		<input type="submit" value="등록">
+	</form>
+	
+</body>
+
+<script>
+	document.getElementById('btn').addEventListener('click', ajax_call);
+
+	function ajax_call() {
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			console.log("----->" + xhr.readyState + " / " + xhr.DONE);
+
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {
+					var html = "<ul>";
+
+					var msg = JSON.parse(xhr.responseText);
+					console.log(msg);
+					
+					html += "<li>" + "식자재명: " + msg.ingredientName + "</li>";
+					html += "<li>" + "거래처명: " + msg.supplierName + "</li>";
+						
+					html += "</ul>";
+
+					document.getElementById('display').innerHTML = html;
+				} else {
+					console.error(xhr.responseText);
+				}
+			}
+		};
+		var date = "income="+document.getElementById('income').value;
+		xhr.open("POST", "http://localhost/aos/ingredientsearch", true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(date);
+	};
+</script>
+</html>

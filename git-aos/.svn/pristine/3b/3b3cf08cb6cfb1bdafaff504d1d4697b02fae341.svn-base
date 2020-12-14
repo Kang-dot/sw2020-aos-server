@@ -1,0 +1,37 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<ul>
+		<li><h3>View Supplier</h3>
+			<ul>
+				<li>이름 : ${supplier.name }</li>
+				<li>연락처 : ${supplier.phoneNo }</li>
+				<li>취급 식자재
+					<c:forEach var="ingredient" items="${ingredients }">
+						<ul>
+							<li><c:out value="${ingredient.value}"/></li>
+						</ul>
+					</c:forEach>
+				</li>
+				<li>이메일 : ${supplier.email }</li>
+				<li>주소 : (${supplier.zipCode }) ${supplier.address }</li>
+				<li>상세주소 : ${supplier.detailAddress }</li>
+			</ul>
+		</li>
+		<li>${supplier.no }</li>
+		<form:form action="/aos/supplier/${supplier.no }" method="post">
+			<li><a href="<%=request.getContextPath() %>/aos/supplier/${supplier.no }/editform">수정</a></li>
+			<input type="hidden" name="_method" value="DELETE" />
+			<li><input type="submit" value="삭제" /></li>
+		</form:form>
+	</ul>
+</body>
+</html>

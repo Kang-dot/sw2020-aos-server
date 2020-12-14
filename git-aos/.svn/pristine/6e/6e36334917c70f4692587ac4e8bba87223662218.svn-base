@@ -1,0 +1,40 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script>
+		document.getElementById('trayForm')
+				.addEventListener('click', form_call);
+
+		function form_call() {
+			location.href = "/tray/form";
+		}
+	</script>
+
+	tray List
+	<table border="1px">
+		<tr>
+			<th>트레이 번호</th>
+			<th>식자재 명</th>
+			<th>발주 무게</th>
+			<th>발주 수량</th>
+		</tr>
+		<c:forEach items="${trayList}" var="tray">
+			<tr>
+				<td><a href="/tray/${tray.no}">${tray.no}</td>
+				<td>${tray.ingredientName}</td>
+				<td>${tray.orderWeight}</td>
+				<td>${tray.orderAmount}</td>
+			</tr>
+		</c:forEach>
+	</table>
+
+	<button type="button" id="trayForm" onclick="form_call()">등록하기</button>
+</body>
+</html>

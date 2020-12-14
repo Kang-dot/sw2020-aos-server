@@ -1,0 +1,9 @@
+package com.aos.account;
+
+import javax.servlet.http.HttpSession;
+
+public interface AccountService {
+	public String login(Account account,HttpSession session);
+	public void logout();
+	public boolean searchAccount(Account account);
+}

@@ -1,0 +1,14 @@
+package com.aos.requestorder;
+
+import java.util.List;
+
+import com.aos.ingredient.Ingredient;
+import com.aos.supplier.Supplier;
+import com.aos.tray.Tray;
+
+public interface RequestOrderService {
+	public void registRequestOrderInfo(Tray tray);
+	public void sendRequestOrderInfo(RequestOrder requestOrder, Supplier supplier, Ingredient ingredient);
+	public RequestOrder viewRequestOrder(RequestOrder requestOrder);
+	public List<RequestOrder> requestOrderList();
+}

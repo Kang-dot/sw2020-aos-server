@@ -1,0 +1,63 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/ingredient" method="post">
+		식자재명: <input id="ingredientName" type="text" name="name"> 
+		<input id="btn" type="button" value="ajax_call"/> <br/>
+		단위 무게: <input type="text" name="unitWeight"> <br/>
+		단위 가격: <input type="text" name="unitPrice"> <br/>
+		주거래처명: <input type="text" name="status"> <br/>
+		
+		<input type="submit" value="전송">
+		<input type="reset" value="지우기">		
+	</form>
+	
+	<div id="display"></div>
+
+</body>
+<script>
+	document.getElementById('btn').addEventListener('click', ajax_call);
+
+	function ajax_call() {
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			console.log("----->" + xhr.readyState + " / " + xhr.DONE);
+
+			if (xhr.readyState === xhr.DONE) {
+				if (xhr.status === 200 || xhr.status === 201) {
+					var html = "<table border=\"1\">";
+
+					var msg = JSON.parse(xhr.responseText);
+
+					for (var i = 0; i < msg.length; i++) {
+						var row = msg[i];
+						for (name in row) {
+							html += "<tr>";
+							html += "	<td>";
+							html += row[name];
+							html += "	</td>";
+							html += "</tr>";
+						}
+					}
+					html += "</table>";
+
+					document.getElementById('display').innerHTML = html;
+				} else {
+					console.error(xhr.responseText);
+				}
+			}
+		};
+		var date = "ingredientName="+document.getElementById('ingredientName').value;
+		xhr.open("POST", "http://localhost/ingredient/check", true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(date);
+	};
+</script>
+
+</html>>

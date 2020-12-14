@@ -1,0 +1,34 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>식자재 조회</title>
+</head>
+<body>
+<h1><font size="8">식자재 조회</font></h1>
+
+	<ul>
+	<li> 식자재 명: ${ingredient.name} </li>
+	<li> 단위 무게: ${ingredient.unitWeight} </li>
+	<li> 단위 가격: ${ingredient.unitPrice} </li>
+	<li> 주 거래처: ${mainSupplierName}</li>
+	</ul>
+	
+	<form method="get" action="/aos/ingredient/${ingredient.name}/editform">
+		수정버튼 <input type="submit" value="${ingredient.name}"/>
+	</form>
+
+	<form method="post" action="/aos/ingredient">
+    	<input type="hidden" name="_method" value="DELETE"/>
+		삭제버튼 <input type="hidden" name="no" value="${ingredient.no}"/>
+		<input type="submit" value="${ingredient.no}" />
+	</form>
+	
+	<form method="get" action="/aos/ingredient">
+		<input type="submit" value="뒤로"/>
+	</form>
+	
+</body>
+</html>

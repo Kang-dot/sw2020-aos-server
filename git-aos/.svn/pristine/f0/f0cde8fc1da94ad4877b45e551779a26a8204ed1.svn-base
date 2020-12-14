@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<ul>
+		<li><h3>View Supplier</h3>
+			<ul>
+				<li>이름 : ${supplier.name }</li>
+				<li>번호 : ${supplier.phoneNo }</li>
+				<li>이메일 : ${supplier.email }</li>
+				<li>주소 : (${supplier.zipCode }) ${supplier.address }</li>
+				<li>상세주소 : ${supplier.detailAddress }</li>
+			</ul>
+		</li>
+	</ul>
+</body>
+</html>

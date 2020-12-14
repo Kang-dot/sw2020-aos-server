@@ -1,0 +1,44 @@
+package com.aos.ingredient;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+public class IngredientValidation implements Validator{
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Ingredient.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		Ingredient ingredient = (Ingredient) target;
+		
+		if (ingredient.getName().trim().isEmpty() || ingredient.getUnitPrice().trim().isEmpty() || ingredient.getUnitWeight().trim().isEmpty()) {
+			errors.rejectValue("no", "required");
+		}
+		
+		if (ingredient.getUnitPrice().isEmpty()) {
+			errors.rejectValue("errors", "found");
+		}
+		
+		if (checkString(ingredient.getUnitPrice()) != true ) {
+			errors.rejectValue("unitPrice", "onlyNumber");
+		}
+		
+		if (checkString(ingredient.getUnitWeight()) != true ) {
+			errors.rejectValue("unitWeight", "onlyNumber");
+		}
+	}
+	
+	public boolean checkString(String check) {
+		try {
+			Double.parseDouble(check);
+			return true; // 숫자임
+		} catch (Exception e) {
+			System.out.println(check);
+			return false; // 문자 들어있음
+		}
+	}
+
+}

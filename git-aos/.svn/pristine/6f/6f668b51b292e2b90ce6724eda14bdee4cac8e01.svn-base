@@ -1,0 +1,100 @@
+package com.aos.ingredient;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+@RestController
+@RequestMapping("/aos")
+public class IngredientController {
+	@Autowired
+	private IngredientServiceImpl ingredientServiceImpl;
+	
+	@GetMapping("/ingredient")
+	public ModelAndView ingredientList() {
+		ModelAndView modelAndView = new ModelAndView();
+		Map<String, String> result = ingredientServiceImpl.ingredientList();
+		modelAndView.setViewName("/ingredient/ingredientList");
+		modelAndView.addObject("data", result);
+		return modelAndView;
+	}
+	
+	@GetMapping("/ingredient/form")
+	public ModelAndView registIngredient() {
+		ModelAndView modelAndView = new ModelAndView();
+		List<String> supplierList = ingredientServiceImpl.showSupplier();
+		modelAndView.setViewName("/ingredient/ingredientRegistForm");
+		modelAndView.addObject("supplierList", supplierList);
+		return modelAndView;
+	}
+	
+	@PostMapping("/ingredient")
+	public ModelAndView registIngredient(Ingredient ingredient, String mainSupplier) {
+		ModelAndView modelAndView = new ModelAndView();
+		ingredientServiceImpl.registIngredient(ingredient, mainSupplier);
+		modelAndView.setViewName("redirect:/aos/ingredient");
+		return modelAndView;
+	}
+	
+	@GetMapping("/ingredient/{ingredientName}")
+	public ModelAndView viewIngredient(@PathVariable String ingredientName) {
+		ModelAndView modelAndView = new ModelAndView();
+		Ingredient ingredient = ingredientServiceImpl.viewIngredient(ingredientName);
+		String mainSupplier = ingredientServiceImpl.foreditForm(ingredientName);
+		modelAndView.addObject("ingredient", ingredient);
+		modelAndView.addObject("mainSupplierName", mainSupplier);
+		modelAndView.setViewName("/ingredient/ingredientView");
+		return modelAndView;
+	}
+	
+	@GetMapping("/ingredient/{name}/editform")
+	public ModelAndView editIngredient(@PathVariable String name) {
+		ModelAndView modelAndView = new ModelAndView();
+		Ingredient ingredient = ingredientServiceImpl.viewIngredient(name);
+		String mainSupplier = ingredientServiceImpl.foreditForm(name);
+		List<String> supplierList = ingredientServiceImpl.showSupplier();
+		modelAndView.addObject("ingredient", ingredient);
+		modelAndView.addObject("mainSupplierName", mainSupplier);
+		modelAndView.addObject("supplierList", supplierList);
+		modelAndView.setViewName("/ingredient/ingredientEditForm");	
+		return modelAndView;
+	}
+	
+	@PutMapping("/ingredient")
+	public ModelAndView editIngredient(Ingredient ingredient, String mainSupplier) {
+		ModelAndView modelAndView = new ModelAndView();
+		ingredientServiceImpl.editIngredient(ingredient, mainSupplier);
+		modelAndView.setViewName("redirect:/aos/ingredient");
+		return modelAndView;
+	}
+	
+	@DeleteMapping("/ingredient")
+	public ModelAndView deleteIngredient(String no) {
+		ModelAndView modelAndView = new ModelAndView();
+		ingredientServiceImpl.deleteIngredient(no);
+		modelAndView.setViewName("redirect:/aos/ingredient");
+		return modelAndView;
+	}
+	
+	@PostMapping(value = "/ingredientsearch", consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE) // GET -> POST변경, 반환타입: List<Ingredient> -> Map<String, String> 변경
+	public Map<String, String> searchIngredisent(String income) {
+		Map<String, String> searchResult = ingredientServiceImpl.searchIngredient(income);
+		return searchResult;
+	}
+	
+	@PostMapping("/ingredient/check")
+	public boolean checkIngredient(String ingredientName) {
+		boolean checkName = ingredientServiceImpl.checkIngredient(ingredientName);
+		return checkName;
+	}
+}

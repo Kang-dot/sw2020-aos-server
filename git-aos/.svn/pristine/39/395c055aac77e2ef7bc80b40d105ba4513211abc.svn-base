@@ -1,0 +1,10 @@
+package com.aos.requestorder;
+
+import java.util.List;
+
+public interface RequestOrderService {
+	public void registRequestOrderInfo(RequestOrder requestOrder);
+	public void sendRequestOrderInfo(RequestOrder requestOrder);
+	public RequestOrder searchRequestOrder(RequestOrder requestOrder);
+	public List<RequestOrder> requestOrderList();
+}

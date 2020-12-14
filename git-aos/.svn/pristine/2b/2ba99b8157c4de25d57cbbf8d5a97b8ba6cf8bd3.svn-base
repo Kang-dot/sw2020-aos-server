@@ -1,0 +1,40 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>식자재 목록</title>
+</head>
+<body>
+<h1><font size="8">식자재 목록</font></h1>
+
+<table border="1">
+	<tr>
+		<td>번호</td>
+		<td>식자재명</td>
+		<td>주 거래처명</td>
+		
+	</tr>
+	
+	<tr>
+		<td>000</td>
+		<td>000</td>
+		<td>000</td>
+		
+	</tr>
+	
+	<tr>
+		<td>000</td>
+		<td>000</td>
+		<td>000</td>
+		
+	</tr>
+	
+	<c:forEach var="i" items="${data}">
+			${i.key}=${i.value}
+	</c:forEach>
+
+</table>
+</body>
+</html>

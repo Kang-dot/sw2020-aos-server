@@ -1,0 +1,85 @@
+package com.aos.handling;
+
+import java.sql.Date;
+import java.io.Serializable;
+
+/**
+ * @author plusperson@gmail.com
+*/
+public class Handling implements Serializable {
+    private String no;
+    private String ingredientNo;
+    private String supplierNo;
+    private String mainSupplierStatus;
+
+    private int itemStart;
+    private int itemSizePerPage;
+
+    public Handling() {
+    }
+    
+    public Handling(String no, String ingredientNo, String supplierNo, String mainSupplierStatus) {
+    	this.no = no;
+        this.ingredientNo = ingredientNo;
+        this.supplierNo = supplierNo;
+        this.mainSupplierStatus = mainSupplierStatus;
+    }
+    
+    public Handling(String no, String ingredientNo, String supplierNo, String mainSupplierStatus, int itemStart, int itemSizePerPage) {
+        this.no = no;
+        this.ingredientNo = ingredientNo;
+        this.supplierNo = supplierNo;
+        this.mainSupplierStatus = mainSupplierStatus;
+
+        this.itemStart = itemStart;
+        this.itemSizePerPage = itemSizePerPage;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
+    }
+
+    public String getNo() {
+        return this.no;
+    }
+
+    public void setIngredientNo(String ingredientNo) {
+        this.ingredientNo = ingredientNo;
+    }
+
+    public String getIngredientNo() {
+        return this.ingredientNo;
+    }
+
+    public void setSupplierNo(String supplierNo) {
+        this.supplierNo = supplierNo;
+    }
+
+    public String getSupplierNo() {
+        return this.supplierNo;
+    }
+
+    public void setMainSupplierStatus(String mainSupplierStatus) {
+        this.mainSupplierStatus = mainSupplierStatus;
+    }
+
+    public String getMainSupplierStatus() {
+        return this.mainSupplierStatus;
+    }
+
+    public void setItemStart(int itemStart) {
+        this.itemStart = itemStart;
+    }
+
+    public int getItemStart() {
+        return this.itemStart;
+    }
+
+    public void setItemSizePerPage(int itemSizePerPage) {
+        this.itemSizePerPage = itemSizePerPage;
+    }
+
+    public int getItemSizePerPage() {
+        return this.itemSizePerPage;
+    }
+}

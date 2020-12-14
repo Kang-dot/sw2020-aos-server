@@ -1,0 +1,7 @@
+package com.aos.agent;
+
+public interface AgentService {
+	public void transferWeightValue(Object json);
+	public void incomeWeightValue(Object json);
+	public void ledLightingAccordingToStatus(double weight);
+}

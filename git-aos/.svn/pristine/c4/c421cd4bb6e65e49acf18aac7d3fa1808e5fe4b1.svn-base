@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ include file="../include/header.jsp" %>
+<!-- <!DOCTYPE html> -->
+<!-- <html> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8"> -->
+<!-- <title>Insert title here</title> -->
+<!-- </head> -->
+<!-- <body> -->
+	<div class="slim-mainpanel">
+		<div class="container">
+			<div class="slim-pageheader">
+				<ol class="breadcrumb slim-breadcrumb">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item"><a href="#">UI Elements</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Basic Tables</li>
+				</ol>
+				<h6 class="slim-pagetitle">트레이 정보</h6>
+			</div>
+			<!-- slim-pageheader -->
+			<div class="section-wrapper mg-t-20">
+				<div class="col-md-6 col-lg-4">
+					<ul class="list-group list-group-striped">
+						<li class="list-group-item">
+							<p class="mg-b-0">
+								<strong class="tx-inverse tx-medium">${tray.no}</strong> <span
+									class="text-muted">트레이 번호</span>
+							</p>
+						</li>
+						<li class="list-group-item">
+							<p class="mg-b-0">
+								<strong class="tx-inverse tx-medium">${tray.ingredientName}</strong>
+								<span class="text-muted">식자재 명</span>
+							</p>
+						</li>
+						<li class="list-group-item">
+							<p class="mg-b-0">
+								<strong class="tx-inverse tx-medium">${tray.orderWeight}</strong>
+								<span class="text-muted">발주 무게</span>
+							</p>
+						</li>
+						<li class="list-group-item">
+							<p class="mg-b-0">
+								<strong class="tx-inverse tx-medium">${tray.orderAmount}</strong>
+								<span class="text-muted">발주 수량</span>
+							</p>
+						</li>
+					</ul>
+				</div>
+				
+				<c:if test="${!empty tray.ingredientName}">
+					<div class="row">
+						<div class="col-sm-6 col-md-3 mg-l-15 mg-t-10">
+							<div class="btn-demo">
+								<button class="btn btn-primary btn-block mg-b-10" id="trayEdit"
+									onclick="edit_form()">수정하기</button>
+							</div>
+							<!-- btn-demo -->
+						</div>
+						<!-- col-sm-3 -->
+					</div>
+					<!-- row -->
+
+					<div class="row">
+						<div class="col-sm-6 col-md-3 mg-l-15">
+							<div class="btn-demo">
+								<button class="btn btn-primary btn-block mg-b-10"
+									id="trayDelete">삭제하기</button>
+							</div>
+							<!-- btn-demo -->
+						</div>
+						<!-- col-sm-3 -->
+					</div>
+					<!-- row -->
+				</c:if>
+				
+			</div>
+			<!-- section-wrapper -->
+		</div>
+		<!-- container -->
+	</div>
+	<!-- slim-mainpanel -->
+	<%@ include file="../include/footer.jsp" %>
+</body>
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+	document.getElementById('trayEdit').addEventListener('click', edit_form);
+	// document.getElementById('trayDelete').addEventListener('click', edit_form);
+
+	$('#trayDelete').click(function() {
+		$.ajax({
+			url : '/aos/tray/${tray.no}',
+			method : "DELETE",
+			async : false
+		}).done(function(result) {
+			if (result == true) {
+				location.href = '/aos/tray';
+			} else if (result == false) {
+				alert("발주 요청된 상품은 삭제가 불가능 합니다.");
+			}
+		});
+	});
+
+	function edit_form() {
+		location.href = "/aos/tray/${tray.no}/editform";
+	}
+</script>
+</html>

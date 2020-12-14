@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Author: plusperson@gmail.com -->
+<mapper namespace="com.aos.requestorder.RequestOrderMapper">
+    <resultMap id="requestOrderResultMap" type="com.aos.requestorder.RequestOrder">
+        <result column="ORDER_DATE" property="orderDate" />
+        <result column="SUPPLIER_NO" property="supplierNo" />
+        <result column="INGREDIENT_NO" property="ingredientNo" />
+        <result column="ORDER_QUANTITY" property="orderQuantity" />
+        <result column="TOTAL_ORDER_PRICE" property="totalOrderPrice" />
+        <result column="STATUS" property="status" />
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="orderDate != null and orderDate != ''">
+                AND DATE_FORMAT(ORDER_DATE, '%Y-%m-%d %I:%i:%s') = DATE_FORMAT(#{orderDate}, '%Y-%m-%d %I:%i:%s')
+            </if>
+            <if test="supplierNo != null and supplierNo != ''">
+                AND SUPPLIER_NO = #{supplierNo}
+            </if>
+            <if test="ingredientNo != null and ingredientNo != ''">
+                AND INGREDIENT_NO = #{ingredientNo}
+            </if>
+            <if test="orderQuantity != null and orderQuantity != ''">
+                AND ORDER_QUANTITY = #{orderQuantity}
+            </if>
+            <if test="totalOrderPrice != null and totalOrderPrice != ''">
+                AND TOTAL_ORDER_PRICE = #{totalOrderPrice}
+            </if>
+            <if test="status != null and status != ''">
+                AND STATUS = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="com.aos.requestorder.RequestOrder" resultType="int">
+        SELECT COUNT(*)
+        FROM request_order
+        <include refid="whereSql" />
+    </select>
+
+    <select id="list" parameterType="com.aos.requestorder.RequestOrder" resultMap="requestOrderResultMap">
+        SELECT *
+        FROM (
+            SELECT
+                DATE_FORMAT(ORDER_DATE, '%Y-%m-%d %I:%i:%s'),
+                SUPPLIER_NO,
+                INGREDIENT_NO,
+                ORDER_QUANTITY,
+                TOTAL_ORDER_PRICE,
+                STATUS
+            FROM request_order
+            <include refid="whereSql" />
+        ) TB
+        <where>
+            <if test="itemStart > -1">
+                RN BETWEEN (#{itemStart} + 1)
+                       AND (#{itemStart} + #{itemSizePerPage})
+            </if>
+        </where>
+    </select>
+
+    <select id="select" parameterType="com.aos.requestorder.RequestOrder" resultMap="requestOrderResultMap">
+        SELECT
+            DATE_FORMAT(ORDER_DATE, '%Y-%m-%d %I:%i:%s'),
+            SUPPLIER_NO,
+            INGREDIENT_NO,
+            ORDER_QUANTITY,
+            TOTAL_ORDER_PRICE,
+            STATUS
+        FROM request_order
+        <include refid="whereSql" />
+    </select>
+
+    <insert id="insert" parameterType="com.aos.requestorder.RequestOrder">
+        INSERT INTO request_order (
+            ORDER_DATE,
+            SUPPLIER_NO,
+            INGREDIENT_NO,
+            ORDER_QUANTITY,
+            TOTAL_ORDER_PRICE,
+            STATUS
+        ) VALUES (
+            DATE_FORMAT(#{orderDate}, '%Y-%m-%d %I:%i:%s'),
+            #{supplierNo},
+            #{ingredientNo},
+            #{orderQuantity},
+            #{totalOrderPrice},
+            #{status}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.aos.requestorder.RequestOrder">
+        UPDATE request_order
+        <set>
+            <if test="orderDate != ''">
+                ORDER_DATE = DATE_FORMAT(#{orderDate}, '%Y-%m-%d %I:%i:%s'),
+            </if>
+            <if test="supplierNo != ''">
+                SUPPLIER_NO = #{supplierNo},
+            </if>
+            <if test="ingredientNo != ''">
+                INGREDIENT_NO = #{ingredientNo},
+            </if>
+            <if test="orderQuantity != ''">
+                ORDER_QUANTITY = #{orderQuantity},
+            </if>
+            <if test="totalOrderPrice != ''">
+                TOTAL_ORDER_PRICE = #{totalOrderPrice},
+            </if>
+            <if test="status != ''">
+                STATUS = #{status},
+            </if>
+        </set>
+    </update>
+
+    <delete id="delete" parameterType="com.aos.requestorder.RequestOrder">
+        DELETE FROM request_order
+        <include refid="whereSql" />
+    </delete>
+</mapper>

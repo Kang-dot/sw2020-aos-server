@@ -1,0 +1,73 @@
+package com.aos.tray;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class TrayServiceImpl implements TrayService{
+	@Override
+	public void registTray(Tray tray) {
+		/*
+		 * if (입력한 값이 존재하는가?) {
+		 * 		트레이 정보를 조회한다.
+		 * 		if (트레이에 등록되지 않은 식자재인가?) {
+		 * 			거래처 정보를 수정한다.
+		 * 		}
+		 * }
+		 * 끝
+		 */
+	}
+
+	@Override
+	public Tray viewTray(Tray tray) {
+		/*
+		 * if (입력한 값이 존재하는가?) {
+		 * 		트레이 정보를 조회한다.
+		 * }
+		 */
+		return null;
+	}
+
+	@Override
+	public List<Tray> trayList() {
+		/*
+		 * 트레이 목록을 조회한다.
+		 */
+		return null;
+	}
+
+	@Override
+	public void editTray(Tray tray) {
+		/*
+		 * if (입력한 값이 존재하는가?) {
+		 * 		트레이 정보를 조회한다.
+		 * 		트레이 정보를 수정한다.
+		 * }
+		 * 끝
+		 */
+	}
+
+	@Override
+	public void deleteTray(Tray tray) {
+		/*
+		 * if (입력값이 존재하는가?) {
+		 * 		트레이 정보 삭제
+		 * }
+		 * 끝
+		 */
+	}
+
+	@Override
+	public int checkTray(String ingredientName) {
+		/*
+		 * 트레이 정보를 조회한다.
+		 * if (트레이에 등록된 식자재명이 중복되지 않는가?) {
+		 * 		중복여부를 반환한다.
+		 * }
+		 * 중복여부를 반환한다.
+		 */
+		return 0;
+	}
+
+}

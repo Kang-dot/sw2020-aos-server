@@ -1,0 +1,131 @@
+package com.aos.supplier;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aos.handling.Handling;
+import com.aos.handling.HandlingMapper;
+import com.aos.ingredient.Ingredient;
+import com.aos.ingredient.IngredientMapper;
+
+@Service
+public class SupplierServiceImpl implements SupplierService {
+	@Autowired
+	private SupplierMapper supplierMapper;
+
+	@Autowired
+	private HandlingMapper handlingMapper;
+	
+	@Autowired
+	private IngredientMapper ingredientMapper; 
+
+	@Override
+	public void registSupplier(Supplier supplier, String[] handlingIngredients) {
+		if(supplier != null) {
+			//입력 값이 존재하는 지 확인한다.
+			try {
+				Supplier oneSupplier = new Supplier();
+				oneSupplier.setName(supplier.getName());
+				
+				if(supplierMapper.count(oneSupplier) < 1) {
+					//거래처명이 중복되지 않는지 확인한다.
+					supplier.setStatus("Y");
+					supplierMapper.insert(supplier);
+					
+					for (int i = 0; i < handlingIngredients.length; i ++) {
+						Ingredient ingredient = new Ingredient(null,handlingIngredients[i],null,null,"Y");
+						ingredient = ingredientMapper.select(ingredient);
+						Handling handling = new Handling(null,ingredient.getNo(),null,"Y");
+						
+						if(handlingMapper.select(handling) != null) {
+							handling = new Handling(null, supplier.getNo(), handlingIngredients[i], "N");
+							handlingMapper.insert(handling);
+						} else {
+							handling = new Handling(null, supplier.getNo(), handlingIngredients[i], "Y");
+							handlingMapper.insert(handling);
+						}
+					}
+				} else {
+					Supplier twoSupplier = new Supplier();
+					twoSupplier.setName(supplier.getName());
+					twoSupplier.setStatus("N");
+					twoSupplier = supplierMapper.select(twoSupplier);
+					
+					if(twoSupplier != null) {
+						twoSupplier.setStatus("Y");
+						supplierMapper.update(twoSupplier);
+						Handling handling = new Handling(null,null,twoSupplier.getNo(),null);
+						handlingMapper.delete(handling);
+						
+						for (int i = 0; i < handlingIngredients.length; i ++) {
+							Ingredient ingredient = new Ingredient(null,handlingIngredients[i],null,null,"Y");
+							ingredient = ingredientMapper.select(ingredient);
+							handling = new Handling(null,ingredient.getNo(),null,"Y");
+							if(handlingMapper.select(handling) != null) {
+								handling = new Handling(null,ingredient.getNo(), supplier.getNo(), "N");
+								handlingMapper.insert(handling);
+							} else {
+								handling = new Handling(null,ingredient.getNo(), supplier.getNo(), "Y");
+								handlingMapper.insert(handling);
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public Supplier viewSupplier(Supplier supplier) {
+		
+		return null;
+	}
+
+	@Override
+	public List<Supplier> supplierList() {
+		/*
+		 * 거래처 정보를 조회한다.
+		 */
+		return null;
+	}
+
+	@Override
+	public void editSupplier(Supplier supplier) {
+		/*
+		 * if (입력값이 존재하는가?) { 거래처 정보 조회 if (기존 거래처의 취급 식자재가 수정되었는가?) { 트레이 조회 취급 정보 조회
+		 * if (트레이에 등록된 식자재의 주 거래처가 해당 거래처가 아닌가?) { 거래처 정보 수정 취급 정보 삭제 취급 정보 등록 } } 거래처
+		 * 정보 수정 } 끝
+		 */
+	}
+
+	@Override
+	public void deleteSupplier(Supplier supplier) {
+		/*
+		 * if (입력한 값이 존재하는가?) { 취급 테이블을 조회한다. 취급 테이블의 해당 거래처에 속하는 항목들을 삭제한다. 거래처를 삭제한다.
+		 * } 끝
+		 */
+	}
+
+	@Override
+	public int checkSupplier(String name) {
+		/*
+		 * 거래처 정보를 조회한다 if (거래처명이 중복되지 않는가?) { 중복 여부를 반환한다. } 중복 여부를 반환한다.
+		 */
+		Supplier supplier = new Supplier();
+		int count = 0;
+
+		try {
+			supplier.setName(name);
+			count = supplierMapper.count(supplier);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return count;
+	}
+
+}

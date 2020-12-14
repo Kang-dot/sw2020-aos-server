@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	tray view
+	<ul>
+		<li>트레이 번호 : ${tray.no}</li>
+		<li>식자재 명 : ${tray.ingredientName}</li>
+		<li>발주 무게 : ${tray.orderWeight}</li>
+		<li>발주 수량 : ${tray.orderAmount}</li>
+
+		<c:if test="${!empty tray.ingredientName}">
+			<li><button type="button" id="trayEdit" onclick="edit_form()">수정하기</button></li>
+
+			<li><button type="button" id="trayDelete">삭제하기</button></li>
+
+		<!--
+			<form:form action="/tray/${tray.no}" method="post">
+				<input type="hidden" name="_method" value="DELETE" />
+				<li><input type="submit" value="삭제하기" /></li>
+			</form:form>
+		-->
+		</c:if>
+	</ul>
+</body>
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script>
+		document.getElementById('trayEdit').addEventListener('click', edit_form);
+		// document.getElementById('trayDelete').addEventListener('click', edit_form);
+		
+		$('#trayDelete').click(function() {
+			$.ajax({
+				url: '/aos/tray/${tray.no}',
+				method: "DELETE",
+			});
+			location.href = '/aos/tray';
+		});
+		
+		function edit_form() {
+			location.href = "/aos/tray/${tray.no}/editform";
+		}
+	</script>
+</html>
